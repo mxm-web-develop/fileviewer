@@ -47,7 +47,7 @@ export default ({ mode }: { mode: string }) => {
           scripts: {
             test: 'yarn link',
             disconnect: 'yarn unlink',
-            publish: 'npm publish --access public',
+            // publish: 'npm publish --access public',
           },
           dependencies: {},
           exports: {
