@@ -71,7 +71,7 @@ export default ({ mode }: { mode: string }) => {
         targets: [{ src: 'NPMREADME.md', dest: 'dist', rename: 'README.md' }],
         hook: 'writeBundle',
       }),
-      shiftStaticFiles(['flies','worker'])
+      shiftStaticFiles(['files']),
     ],
     resolve: {
       alias: {
@@ -91,7 +91,6 @@ export default ({ mode }: { mode: string }) => {
       },
       rollupOptions: {
         external: ['react', 'react-dom'],
-
         input: {
           main: path.resolve(__dirname, 'src/application/lib_enter.ts'),
         },
@@ -103,17 +102,9 @@ export default ({ mode }: { mode: string }) => {
             react: 'React',
             // 'react-dom': 'ReactDOM',
           },
-          plugins: [
-            terser(), // 压缩代码
-          ],
         },
-        treeshake: true, // 启用 tree-shaking，减少无用代码
+        // treeshake: true, // 启用 tree-shaking，减少无用代码
       },
-      // cssCodeSplit: true,
-      cssMinify: true,
-      minify: 'esbuild',
-      chunkSizeWarningLimit: 480,
-      emptyOutDir: true, // 清空 dist 文件夹
     },
     server: {
       cors: true,

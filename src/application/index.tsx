@@ -6,7 +6,7 @@ import TextDisplay from "./views/TextDisplay";
 import CsvDisplay from "./views/CSVDisplay";
 import XlsxDisplay from "./views/XlsxDisplay";
 import WordsDisplay from "./views/WordsDisplay";
-// import PDFDisplay from "./views/PdfDisplay";
+import PDFDisplay from "./views/PdfDisplay";
 import Layout from "./views/Layout";
 import { Blockquote, Theme, ThemeProps } from '@radix-ui/themes';
 import { AppStatus } from "./store/system.type";
@@ -92,8 +92,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const renderFile = () => {
     switch (appState.file_form) {
-      // case 'pdf':
-      //   return <PDFDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
+      case 'pdf':
+        return <PDFDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
       // case 'doc':
       // case 'docx':
       //   return <WordsDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
