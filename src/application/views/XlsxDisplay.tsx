@@ -38,18 +38,18 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
     // 初始化时设置高度
     handleResize();
 
-    // // 使用 ResizeObserver 监听 tableContainer 的高度变化
-    const resizeObserver = new ResizeObserver(handleResize);
-    if (tableContainer.current) {
-      resizeObserver.observe(tableContainer.current);
-    }
+    // // // 使用 ResizeObserver 监听 tableContainer 的高度变化
+    // const resizeObserver = new ResizeObserver(handleResize);
+    // if (tableContainer.current) {
+    //   resizeObserver.observe(tableContainer.current);
+    // }
 
-    // 清理 ResizeObserver
-    return () => {
-      if (tableContainer.current) {
-        resizeObserver.unobserve(tableContainer.current);
-      }
-    };
+    // // 清理 ResizeObserver
+    // return () => {
+    //   if (tableContainer.current) {
+    //     resizeObserver.unobserve(tableContainer.current);
+    //   }
+    // };
   }, []);
 
   useEffect(() => {
@@ -171,7 +171,7 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
               <Tabs.Trigger
                 key={sheet}
                 value={sheet}
-                className="px-4 border border-solid border-gray-300 py-2 cursor-pointer transition-colors duration-300 
+                className="px-4 h-[40px] border border-solid border-gray-300 py-2 cursor-pointer transition-colors duration-300 
                        data-[state=active]:bg-green-500 data-[state=active]:text-white 
                        hover:bg-blue-200"
               >

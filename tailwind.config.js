@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
 export default {
-  content: ['./src/**/*.{html,tsx,mdx}'],
+  content: ['./src/**/*.{html,ts,tsx,mdx}'],
   mode: 'jit',
   corePlugins: {
     preflight: false,

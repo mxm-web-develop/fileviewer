@@ -10,22 +10,30 @@ import version from 'vite-plugin-package-version';
 import pkg from './package.json';
 import terser from '@rollup/plugin-terser';
 import copy from 'rollup-plugin-copy';
-
-// function removeDistFile() {
-//   return {
-//     name: 'remove-dist-file',
-//     writeBundle() {
-//       const mediaDir = path.resolve(__dirname, 'dist', 'files');
-//       fs.rmdirSync(mediaDir, { recursive: true });
-//     }
-//   };
-// }
+import fs from 'fs';
+function shiftStaticFiles(directories: string[]) {
+  return {
+    name: 'shift-static-file',
+    writeBundle() {
+      directories.forEach((dir) => {
+        const targetDir = path.resolve(__dirname, 'dist', dir);
+        if (fs.existsSync(targetDir)) {
+          fs.rmSync(targetDir, { recursive: true, force: true });
+          console.log(`Deleted directory: ${targetDir}`);
+        } else {
+          console.warn(`Directory not found: ${targetDir}`);
+        }
+      });
+    },
+  };
+}
 
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd());
   console.log(env);
 
   return defineConfig({
+    base: './',
     plugins: [
       resolve(),
       commonjs(),
@@ -43,7 +51,7 @@ export default ({ mode }: { mode: string }) => {
           name: env.VITE_PUBLISH_NAME || pkg.name,
           main: 'index.js',
           license: 'MIT',
-          style: 'assets/main.css',
+          style: 'assets/style.css',
           types: 'index.d.ts',
           private: false,
           version: pkg.version,
@@ -55,7 +63,7 @@ export default ({ mode }: { mode: string }) => {
           },
           exports: {
             '.': './index.js',
-            './styles.css': './assets/lib_enter.css',
+            './style.css': './assets/style.css',
           },
         },
       }),
@@ -63,6 +71,7 @@ export default ({ mode }: { mode: string }) => {
         targets: [{ src: 'NPMREADME.md', dest: 'dist', rename: 'README.md' }],
         hook: 'writeBundle',
       }),
+      shiftStaticFiles(['flies','worker'])
     ],
     resolve: {
       alias: {
@@ -72,6 +81,7 @@ export default ({ mode }: { mode: string }) => {
     esbuild: {
       charset: 'ascii',
     },
+    // assetsInclude: ['**/*.mjs'], // 确保 Vite 能识别 .mjs 文件为资源
     build: {
       outDir: 'dist',
       lib: {
@@ -106,6 +116,7 @@ export default ({ mode }: { mode: string }) => {
       emptyOutDir: true, // 清空 dist 文件夹
     },
     server: {
+      cors: true,
       host: '0.0.0.0',
       port: 8888,
     },

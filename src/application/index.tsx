@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 
 import './style.css';
 import "@radix-ui/themes/styles.css";
@@ -11,7 +11,7 @@ import Layout from "./views/Layout";
 import { Blockquote, Theme, ThemeProps } from '@radix-ui/themes';
 import { AppStatus } from "./store/system.type";
 import { useStateStore } from "./store";
-import PDFDisplay from "./views/PdfDisplay";
+//import PDFDisplay from "./views/PdfDisplay";
 import { produce } from "immer";
 import { HtmlDisplay } from "./views/HtmlDisplay";
 import { registerAllModules } from 'handsontable/registry';
@@ -92,8 +92,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const renderFile = () => {
     switch (appState.file_form) {
-      case 'pdf':
-        return <PDFDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
+      // case 'pdf':
+      //   return <PDFDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
       // case 'doc':
       // case 'docx':
       //   return <WordsDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
@@ -112,27 +112,24 @@ export const useFileViewer = (props: IUseFileViewer) => {
         </Blockquote>
     }
   };
-  const handleEmmit = (type: string) => {
-    return {
-      type: type,
-      data: {}
-    }
-  }
+
   return {
     Element: (
-      <Theme {...theme} className=" absolute top-0 left-0 h-full overflow-hidden w-full">
-        <Layout handleEmmit={props.actionOnEmmit && props.actionOnEmmit}>
-          {
-            appState.status === AppStatus.UNLOAD && <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">加载文件中</div>
-          }
-          {
-            appState.status === AppStatus.FETCHED && <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">加载数据成功，渲染文件中</div>
-          }
-          {
-            renderFile()
-          }
+      <Theme asChild {...theme} style={{ minHeight: '100%' }}>
+        <div className="relative h-full w-full">
+          <Layout handleEmmit={props.actionOnEmmit && props.actionOnEmmit}>
+            {
+              appState.status === AppStatus.UNLOAD && <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">加载文件中</div>
+            }
+            {
+              appState.status === AppStatus.FETCHED && <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">加载数据成功，渲染文件中</div>
+            }
+            {
+              renderFile()
+            }
 
-        </Layout>
+          </Layout>
+        </div>
       </Theme>
     ),
 

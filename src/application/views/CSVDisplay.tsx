@@ -16,48 +16,45 @@ const CsvDisplay: React.FC<CsvDisplayProps> = ({ width }) => {
   const hotTableRef = useRef<HotTableClass>(null);
   const tableContainer = useRef<HTMLDivElement>(null);
 
+  const updateHeight = () => {
+    const parentHeight = tableContainer.current?.clientHeight || 0;
+    if (parentHeight !== tableHeight) {
+      setTableHeight(parentHeight);
+    }
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      const parentHeight = tableContainer.current?.clientHeight || 0;
-      const newHeight = parentHeight;
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(updateHeight); // 确保只在下一帧更新
+    });
 
-      if (newHeight !== tableHeight) {
-        setTableHeight(newHeight);
-      }
-    };
-
-    handleResize();
-    const resizeObserver = new ResizeObserver(handleResize);
     if (tableContainer.current) {
       resizeObserver.observe(tableContainer.current);
+      updateHeight(); // 初始化时手动调用一次
     }
 
     return () => {
-      if (tableContainer.current) {
-        resizeObserver.unobserve(tableContainer.current);
-      }
+      resizeObserver.disconnect();
     };
-  }, []);
+  }, [tableHeight]); // tableHeight 的变化不应导致循环
 
   useEffect(() => {
     if (appState.checha_data) {
       Papa.parse(appState.checha_data, {
         complete: (results) => {
-          console.log(results.data)
+          console.log(results.data);
           setRows(results.data as string[][]);
         },
         header: false,
       });
-
-
       setAppStatus(AppStatus.LOADED);
     }
   }, [appState.checha_data]);
+
   const columnHeaders = useMemo(() => rows[0] || [], [rows]);
 
-
   return (
-    <div ref={tableContainer} className="mx-auto" style={{ height: `calc(100%)` }}>
+    <div ref={tableContainer} className="mx-auto" style={{ height: '100%' }}>
       <HotTable
         ref={hotTableRef}
         data={rows.slice(1)} // 使用 rows 作为数据源

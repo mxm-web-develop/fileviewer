@@ -1,4 +1,4 @@
-import { Document, Page, pdfjs } from 'react-pdf';
+// import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -7,8 +7,9 @@ import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
-
-pdfjs.GlobalWorkerOptions.workerSrc = '/worker/pdf.worker.min.mjs';
+// const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
+// import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
+// pdfjs.GlobalWorkerOptions.workerSrc = '/worker/pdf.worker.min.mjs'
 
 interface IPDFDisplayer {
   width?: number;

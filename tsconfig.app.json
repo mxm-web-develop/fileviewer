@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
+    "typeRoots": ["./src/application/types"],
     /* Bundler mode */
     "moduleResolution": "bundler",
     // "allowImportingTsExtensions": false,
@@ -24,6 +24,6 @@
     "declaration": true, // 确保生成类型声明文件
     "outDir": "./dist/types" // 输出类型声明文件的目录
   },
-  "include": ["src"],
+  "include": ["src","src/application/types/**/*"],
   "exclude": ["node_modules", "dist"]
 }
