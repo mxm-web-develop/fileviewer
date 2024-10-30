@@ -1,2 +1,2 @@
-import { useFileViewer } from './index';
+import { useFileViewer } from './Fileviewer';
 export { useFileViewer };

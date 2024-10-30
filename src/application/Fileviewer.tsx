@@ -8,23 +8,16 @@ import XlsxDisplay from "./views/XlsxDisplay";
 import WordsDisplay from "./views/WordsDisplay";
 import PDFDisplay from "./views/PdfDisplay";
 import Layout from "./views/Layout";
-import { Blockquote, Theme, ThemeProps } from '@radix-ui/themes';
+import { Blockquote, Theme } from '@radix-ui/themes';
 import { AppStatus } from "./store/system.type";
 import { useStateStore } from "./store";
 //import PDFDisplay from "./views/PdfDisplay";
 import { produce } from "immer";
 import { HtmlDisplay } from "./views/HtmlDisplay";
 import { registerAllModules } from 'handsontable/registry';
+import { IUseFileViewer } from "./types/system";
 
 registerAllModules();
-interface IUseFileViewer {
-  fileUrl: string;
-  form?: 'pdf' | 'doc' | 'docx' | 'txt' | 'md' | 'html' | 'csv' | 'xlsx' | 'img';
-  width?: number;
-  scale?: number;
-  theme?: ThemeProps;
-  actionOnEmmit?: (type: string) => any
-}
 
 export const useFileViewer = (props: IUseFileViewer) => {
   const { theme = {
@@ -44,14 +37,6 @@ export const useFileViewer = (props: IUseFileViewer) => {
       const fileName = fileNameWithExtension.split('.').slice(0, -1).join('.') || '';
       const fileExtension = fileNameWithExtension.split('.').pop() || '';
       const form = props.form || fileExtension;
-      console.log(urlParts, fileNameWithExtension, fileName, fileExtension, form)
-      // setAppState((prevState) => ({
-      //   ...prevState,
-      //   file_name: fileName || 'untitled',
-      //   file_form: form,
-      //   file_url: props.fileUrl,
-      //   status: AppStatus.UNLOAD,
-      // }));
       setAppState(pre => produce(pre, (draft) => {
         draft.file_form = form,
           draft.file_url = props.fileUrl
@@ -71,12 +56,6 @@ export const useFileViewer = (props: IUseFileViewer) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.blob();
-        // setAppState((prevState) => ({
-        //   ...prevState,
-        //   checha_data: data as any,
-        //   status: AppStatus.FETCHED,
-        // }));
-
         setAppState((pre) => produce(pre, (draft) => {
           draft.checha_data = data as any,
             draft.status = AppStatus.FETCHED
@@ -94,9 +73,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
     switch (appState.file_form) {
       case 'pdf':
         return <PDFDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
-      // case 'doc':
-      // case 'docx':
-      //   return <WordsDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
+      case 'doc':
+      case 'docx':
+        return <WordsDisplay width={props.width || 800} scale={props.scale || 1} /> as React.ReactNode;
       case 'txt':
         return <TextDisplay width={props.width || 800} />;
       case 'csv':

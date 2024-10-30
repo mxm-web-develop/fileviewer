@@ -8,7 +8,6 @@ import generatePackageJson from 'rollup-plugin-generate-package-json';
 import dts from 'vite-plugin-dts';
 import version from 'vite-plugin-package-version';
 import pkg from './package.json';
-import terser from '@rollup/plugin-terser';
 import copy from 'rollup-plugin-copy';
 import fs from 'fs';
 function shiftStaticFiles(directories: string[]) {
@@ -51,6 +50,7 @@ export default ({ mode }: { mode: string }) => {
           name: env.VITE_PUBLISH_NAME || pkg.name,
           main: 'index.js',
           license: 'MIT',
+          // @ts-expect-error 这里是因为样式文件可能没有类型定义
           style: 'assets/style.css',
           types: 'index.d.ts',
           private: false,

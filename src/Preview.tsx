@@ -1,4 +1,4 @@
-import { useFileViewer } from "./application";
+import { useFileViewer } from "./application/Fileviewer";
 
 function Preview() {
 
@@ -6,13 +6,13 @@ function Preview() {
     console.log(type)
   }
   const { Element } = useFileViewer({
-    fileUrl: '/files/1.pdf',
+    fileUrl: '/files/1.html',
     // form:'',
-    width: 680,
+    // width: 680,
     actionOnEmmit: handlethat
   });
 
-  return <div className="h-[700px] w-[850px] relative mx-auto">{Element}</div>;
+  return <div className="h-screen w-[850px] relative mx-auto">{Element}</div>;
 }
 
 

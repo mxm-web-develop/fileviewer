@@ -15,7 +15,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 0,
     'unused-imports/no-unused-imports-ts': 0,
     'react-refresh/only-export-components': 0,
-    '@typescript-eslint/no-explicit-any': 0, // 关闭显式 any 的警告
+    '@typescript-eslint/no-explicit-any': 'off', // 允许使用 any 类型
     '@typescript-eslint/no-inferrable-types': 0, // 关闭隐式 any 的警告
   },
 };

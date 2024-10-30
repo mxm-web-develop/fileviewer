@@ -23,6 +23,9 @@
 
 - npm 镜像下载依赖时： `npm config set registry https://registry.npm.taobao.org` 发布包时：
   `npm config set registry https://registry.npmjs.org` 验证当前设置： `npm config get registry`
+
+  ` npm config set https-proxy http://12.0.0.1:7890` ` npm config set proxy http://12.0.0.1:7890`
+
 -      `yarn config set registry https://registry.npm.taobao.org` ， 最好用yarn镜像来下载，npm保持官网方便进行发布
 
 ## 打包流程
