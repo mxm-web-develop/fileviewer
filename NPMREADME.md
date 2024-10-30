@@ -12,8 +12,10 @@ yarn add @mxmweb/fv
 - TXT
 - Xlsx
 - CVS
+- docx （不能完全还原样式）
+- html
 
-| 待支持格式 docx,图片,html,markdown,pptx
+| 待支持格式 图片,markdown,pptx
 
 ## 使用
 
@@ -28,7 +30,7 @@ function Preview() {
   const { Element } = useFileViewer({
     fileUrl: '/files/1.pdf',
     // form:'',
-    width: 680,
+    <!-- width: 680, -->
     actionOnEmmit: handlethat
   });
 
