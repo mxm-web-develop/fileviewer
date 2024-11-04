@@ -6,7 +6,7 @@ function Preview() {
     console.log(type)
   }
   const { Element } = useFileViewer({
-    fileUrl: '/files/1.html',
+    fileUrl: '/files/6666.pdf',
     // form:'',
     // width: 680,
     actionOnEmmit: handlethat

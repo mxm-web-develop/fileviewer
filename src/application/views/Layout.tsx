@@ -40,7 +40,9 @@ const Layout = ({ children, handleEmmit }: ILayout) => {
           <Flex align={'center'} justify={'between'} className=" h-full w-full    ">
             <Flex justify={'start'} gap={'2'}>
               <img src={currentIcon} alt={`icon`} className="h-5 w-5" />
-              <Heading size={'3'}>{currentHeading}</Heading>
+              <div className="overflow-hidden whitespace-nowrap text-ellipsis" style={{ maxWidth: '350px' }}>
+                <Heading size={'3'}>{currentHeading}</Heading>
+              </div>
             </Flex>
             <Flex gap={'3'}>
               {/* <SizeIcon cursor={'pointer'}  /> */}
