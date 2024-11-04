@@ -11,7 +11,7 @@ import { ScrollArea } from '@radix-ui/themes';
 // import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   '/worker/pdf.worker.min.mjs',
-  import.meta.url,
+  import.meta.url
 ).toString();
 
 interface IPDFDisplayer {
@@ -53,10 +53,19 @@ const PDFDisplay = (props: IPDFDisplayer) => {
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
-      <Document file={appState.checha_data} className="pdf-document my-5 px-8" onLoadSuccess={onDocumentLoadSuccess}>
-        <div className='flex flex-col gap-y-3'>
+      <Document
+        file={appState.file_url}
+        className="pdf-document my-5 px-8"
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
+        <div className="flex flex-col gap-y-3">
           {Array.from(new Array(appState.page_manager?.total), (el, index) => (
-            <Page key={`page_${index + 1}`} pageNumber={index + 1} width={props.width} scale={props.scale} />
+            <Page
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              width={props.width}
+              scale={props.scale}
+            />
           ))}
         </div>
       </Document>
