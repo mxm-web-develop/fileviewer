@@ -10,7 +10,7 @@ import { ScrollArea } from '@radix-ui/themes';
 // const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
 // import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  '/worker/pdf.worker.min.mjs',
+  '/worker/pdf.worker.min.js',
   import.meta.url
 ).toString();
 
