@@ -12,6 +12,19 @@ interface XlsxDisplayProps {
   width?: number;
 }
 
+function findLongestNumberLength(matrix: any[]) {
+  let maxLength = 0;
+
+  for (const row of matrix) {
+    const length = row.length;
+    if (length > maxLength) {
+      maxLength = length;
+    }
+  }
+
+  return maxLength;
+}
+
 const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   const [sheets, setSheets] = useState<string[]>([]);
   const [rows, setRows] = useState<any[][]>([]);
@@ -19,11 +32,10 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   const [selectedSheet, setSelectedSheet] = useState<string>('');
   const { appState, setAppStatus } = useStateStore();
   const [workbook, setWorkbook] = useState<XLSX.WorkBook | null>(null);
-  const [cellStyles, setCellStyles] = useState<any>()
+  const [cellStyles, setCellStyles] = useState<any>();
   const [tableHeight, setTableHeight] = useState<number>(0); // 用于存储表格高度
   const hotTableRef = useRef<HotTableClass>(null); // 引入 ref
   const tableContainer = useRef<HTMLDivElement>(null); // 添加 ref
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -78,24 +90,27 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   }, [appState.checha_data]);
 
   const updateSheetData = (worksheet: XLSX.WorkSheet) => {
-    const jsonData = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
+    let jsonData = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
+    const maxRows = findLongestNumberLength(jsonData);
+    jsonData = jsonData.map((item) => {
+      return [...item, ...Array(maxRows - item.length).fill([])];
+    });
     setRows(jsonData);
     const merges = worksheet['!merges'] || [];
 
     // Validate merges
-    const validMerges = merges.filter(merge => {
+    const validMerges = merges.filter((merge) => {
       return (
         merge.s.r < jsonData.length &&
         merge.e.r < jsonData.length &&
-        merge.s.c < (jsonData[0]?.length || 0) &&
-        merge.e.c < (jsonData[0]?.length || 0)
+        merge.s.c < (maxRows || 0) &&
+        merge.e.c < (maxRows || 0)
       );
     });
 
     if (hotTableRef.current && hotTableRef.current.hotInstance) {
-      const columnCount = jsonData[0]?.length || 0;
+      const columnCount = maxRows || 0;
       const colWidths = Array(columnCount).fill(160);
-
       hotTableRef.current.hotInstance.updateSettings({
         data: jsonData,
         colWidths: colWidths,
@@ -130,9 +145,7 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
       });
       hotTableRef.current.hotInstance.render();
     }
-
-
-  }
+  };
 
   const handleSheetChange = (sheetName: string) => {
     setSelectedSheet(sheetName);
@@ -145,7 +158,12 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   //const columnHeaders = useMemo(() => rows[0] || [], [rows]);
 
   return (
-    <div ref={tableContainer} id="table-container" className="mx-auto" style={{ height: `calc(100%)` }}>
+    <div
+      ref={tableContainer}
+      id="table-container"
+      className="mx-auto"
+      style={{ height: `calc(100%)` }}
+    >
       <HotTable
         ref={hotTableRef}
         data={rows} // 使用 rows 作为数据源
@@ -156,6 +174,7 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
         //readOnly={true}
         manualColumnResize={true} // 启用列宽拖拽调整
         manualRowResize={true}
+        bindRowsWithHeaders={true}
         // mergeCells={merges.map((merge) => ({
         //   row: merge.s.r,
         //   col: merge.s.c,
@@ -183,7 +202,6 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
             2323
           </Tabs.Content> */}
         </Tabs.Root>
-
       </div>
     </div>
   );
