@@ -19,6 +19,7 @@ const typeIcons: { [key: string]: string } = {
   ppt: PptIcon,
   txt: TxtIcon,
   docx: WordIcon,
+  doc: WordIcon,
 };
 interface ILayout {
   children?: ReactNode;
