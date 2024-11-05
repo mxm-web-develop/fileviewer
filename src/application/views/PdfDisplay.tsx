@@ -54,7 +54,7 @@ const PDFDisplay = (props: IPDFDisplayer) => {
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
       <Document
-        file={appState.file_url}
+        file={appState.checha_data}
         className="pdf-document my-5 px-8"
         onLoadSuccess={onDocumentLoadSuccess}
       >
