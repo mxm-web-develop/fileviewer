@@ -21,12 +21,15 @@ export interface ParsedFileItem {
     total: number;
     current: number;
   };
+  //用于管理静态文件的下载和解析状态
   state: 'process' | 'done' | 'error';
 }
 export interface AppStatev1029 {
+  //应用初始化进行用户传参的储存，方便访问
   file_url: string[] | string;
   parse_form: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf';
   display_file_type?: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf' | 'xslx';
+  //用于管理应用的状态
   status: AppState;
   data: ParsedFileItem[] | ParsedFileItem;
 }
@@ -34,6 +37,8 @@ export interface AppStatev1029 {
 type AnnotationItem = DarwAnnotation | MatchAnnotation;
 export enum AppStatus {
   UNLOAD,
+  LOADING,
+  PRASING,
   FETCHED,
   LOADED,
   ERROR,
