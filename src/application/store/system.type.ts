@@ -12,6 +12,25 @@ export interface AppState {
   };
   annotation_manager?: AnnotationItem[];
 }
+
+export interface ParsedFileItem {
+  id: string;
+  checha_data: any;
+  url: string;
+  page_manager?: {
+    total: number;
+    current: number;
+  };
+  state: 'process' | 'done' | 'error';
+}
+export interface AppStatev1029 {
+  file_url: string[] | string;
+  parse_form: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf';
+  display_file_type?: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf' | 'xslx';
+  status: AppState;
+  data: ParsedFileItem[] | ParsedFileItem;
+}
+
 type AnnotationItem = DarwAnnotation | MatchAnnotation;
 export enum AppStatus {
   UNLOAD,

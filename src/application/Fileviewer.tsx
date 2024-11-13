@@ -70,6 +70,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.blob();
+
         setAppState((pre) =>
           produce(pre, (draft) => {
             (draft.checha_data = data as any), (draft.status = getStatus(pre.file_form));

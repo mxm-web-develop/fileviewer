@@ -70,6 +70,7 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
       fileReader.onload = (e) => {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
         const wb = XLSX.read(data, { type: 'array', cellStyles: true });
+        console.log(wb)
         setWorkbook(wb);
         const sheetNames = wb.SheetNames;
         setSheets(sheetNames);

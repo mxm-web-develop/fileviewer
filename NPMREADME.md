@@ -6,6 +6,10 @@
 yarn add @mxmweb/fv
 ```
 
+## 更新说明
+
+v1.0.28 支持图片，解决 xlsx 合并单元格 bug
+
 ## 当前支持文件类型
 
 - PDF
