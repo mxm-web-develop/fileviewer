@@ -182,12 +182,22 @@ export const useFileViewer = (props: IUseFileViewer) => {
     init(fileUrl);
   }, []);
 
+  const handleEvent = (type: string) => {
+    switch (type) {
+      case 'plus':
+        break;
+      case 'minus':
+        break;
+    }
+  };
+
   return {
     Element: (
       <Theme asChild {...theme} style={{ minHeight: '100%' }}>
         <div className="relative h-full w-full">
           <Layout
             handleEmmit={props.actionOnEmmit && props.actionOnEmmit}
+            handleEvent={handleEvent}
             pageBar={
               appState.data.length > 1 ? (
                 <div className="w-[200px] h-full bg-white overflow-y-auto overflow-x-hidden">
@@ -228,10 +238,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
               )
             }
           >
-            <div
-              className="flex-1 h-full flex justify-center bg-[#f3f4f5]"
-              style={{ width: appState.data.length > 1 ? '900px' : '1100px' }}
-            >
+            <div className="w-[calc(100%-200px)] h-full flex justify-center bg-[#f3f4f5]">
               {appState.status === AppStatus.UNLOAD && (
                 <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
                   加载文件中
@@ -242,7 +249,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
                   加载数据成功，渲染文件中
                 </div>
               )}
-              <div className="bg-white h-full w-full ">{renderFile()}</div>
+              <div className="bg-white h-full w-full">{renderFile()}</div>
             </div>
           </Layout>
         </div>

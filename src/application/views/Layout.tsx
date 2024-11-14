@@ -7,7 +7,7 @@ import ImgIcon from '../assets/img.png';
 import PdfIcon from '../assets/pdf.png';
 import WordIcon from '../assets/word.png';
 import PptIcon from '../assets/ppt.png';
-import { Cross2Icon, SizeIcon } from '@radix-ui/react-icons';
+import { Cross2Icon, SizeIcon, PlusCircledIcon, MinusCircledIcon } from '@radix-ui/react-icons';
 const typeIcons: { [key: string]: string } = {
   csv: TableIcon,
   xls: TableIcon,
@@ -25,8 +25,9 @@ interface ILayout {
   children?: ReactNode;
   pageBar?: ReactNode;
   handleEmmit?: (type: string) => any;
+  handleEvent?: (type: string) => any;
 }
-const Layout = ({ children, handleEmmit, pageBar }: ILayout) => {
+const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
   const { appState } = useStateStore();
   const d = appState.data[appState.page_manager.current - 1];
   const { currentIcon, currentHeading } = useMemo(() => {
@@ -54,6 +55,15 @@ const Layout = ({ children, handleEmmit, pageBar }: ILayout) => {
             </Flex>
             <Flex gap={'3'}>
               {/* <SizeIcon cursor={'pointer'}  /> */}
+
+              <PlusCircledIcon
+                cursor={'pointer'}
+                onClick={() => handleEvent && handleEvent('plus')}
+              />
+              <MinusCircledIcon
+                cursor={'pointer'}
+                onClick={() => handleEvent && handleEvent('minus')}
+              />
               <Cross2Icon cursor={'pointer'} onClick={() => userHandler('close')} />
             </Flex>
           </Flex>

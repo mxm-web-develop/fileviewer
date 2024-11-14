@@ -5,12 +5,18 @@ function Preview() {
     console.log(type);
   };
   const { Element } = useFileViewer({
-    // fileUrl: [
-    //   '/aaa.html',
-    //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
-    //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
-    //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
-    // ],
+    fileUrl: [
+      '/aaa.html',
+      '/aaa.html',
+      '/aaa.html',
+      '/aaa.html',
+      '/aaa.html',
+      '/aaa.html',
+      '/aaa.html',
+      'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
+      'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
+      'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_html/V0/202401291222409785.html',
+    ],
     // fileUrl: [
     //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_n%E6%A1%88IWT%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88%E6%A1%88%E4%BE%8B%E5%BA%93/V0/n%E6%A1%88IWT_%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88-%E6%A1%88%E4%BE%8B%E5%BA%93.xlsx',
     //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_n%E6%A1%88IWT%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88%E6%A1%88%E4%BE%8B%E5%BA%93/V0/n%E6%A1%88IWT_%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88-%E6%A1%88%E4%BE%8B%E5%BA%93.xlsx',
@@ -37,7 +43,7 @@ function Preview() {
     //   '/files/测试01.txt',
     //   '/files/测试02.txt',
     // ],
-    fileUrl: '/aaa.html',
+    //fileUrl: '/aaa.html',
     //form: 'xlsx',
     // pdf,txt,html,csv
     // "http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_IWT%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E9%9D%9E%E6%B3%95%E8%B4%B8%E6%98%93%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/V0/IWT%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E9%9D%9E%E6%B3%95%E8%B4%B8%E6%98%93%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A20210520.docx",
@@ -51,7 +57,7 @@ function Preview() {
     actionOnEmmit: handlethat,
   });
 
-  return <div className="w-[1100px] h-[600px] relative mx-auto">{Element}</div>;
+  return <div className="w-[900px] h-[600px] relative mx-auto">{Element}</div>;
 }
 
 export default Preview;
