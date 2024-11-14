@@ -65,12 +65,14 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   }, []);
 
   useEffect(() => {
-    if (appState.checha_data) {
+    if (appState.data?.length) {
+      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      if (!checha_data) return;
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
         const wb = XLSX.read(data, { type: 'array', cellStyles: true });
-        console.log(wb)
+        console.log(wb);
         setWorkbook(wb);
         const sheetNames = wb.SheetNames;
         setSheets(sheetNames);
@@ -82,13 +84,13 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
       };
 
       try {
-        fileReader.readAsArrayBuffer(appState.checha_data);
+        fileReader.readAsArrayBuffer(checha_data);
         setAppStatus(AppStatus.LOADED);
       } catch (err) {
         console.error(err);
       }
     }
-  }, [appState.checha_data]);
+  }, [appState.data, appState.page_manager]);
 
   const updateSheetData = (worksheet: XLSX.WorkSheet) => {
     let jsonData = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });

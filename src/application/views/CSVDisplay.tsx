@@ -39,8 +39,10 @@ const CsvDisplay: React.FC<CsvDisplayProps> = ({ width }) => {
   }, [tableHeight]); // tableHeight 的变化不应导致循环
 
   useEffect(() => {
-    if (appState.checha_data) {
-      Papa.parse(appState.checha_data, {
+    if (appState.data?.length) {
+      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      if (!checha_data) return;
+      Papa.parse(checha_data, {
         complete: (results) => {
           console.log(results.data);
           setRows(results.data as string[][]);
@@ -49,7 +51,7 @@ const CsvDisplay: React.FC<CsvDisplayProps> = ({ width }) => {
       });
       setAppStatus(AppStatus.LOADED);
     }
-  }, [appState.checha_data]);
+  }, [appState.data, appState.page_manager]);
 
   const columnHeaders = useMemo(() => rows[0] || [], [rows]);
 

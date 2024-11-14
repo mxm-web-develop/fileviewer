@@ -23,17 +23,17 @@ const typeIcons: { [key: string]: string } = {
 };
 interface ILayout {
   children?: ReactNode;
+  pageBar?: ReactNode;
   handleEmmit?: (type: string) => any;
 }
-const Layout = ({ children, handleEmmit }: ILayout) => {
+const Layout = ({ children, handleEmmit, pageBar }: ILayout) => {
   const { appState } = useStateStore();
-
+  const d = appState.data[appState.page_manager.current - 1];
   const { currentIcon, currentHeading } = useMemo(() => {
-    const icon = typeIcons[appState.file_form] || TxtIcon; // 默认图标为 TxtIcon
-    const heading = decodeURIComponent(appState.file_name || '文件名'); // 解码文件名
-    // const heading = appState.file_name || '文件名'; // 默认标题为 '文件名'
+    const icon = typeIcons[appState.parse_form] || TxtIcon;
+    const heading = decodeURIComponent(d?.file_name || '文件名');
     return { currentIcon: icon, currentHeading: heading };
-  }, [appState.file_form, appState.file_name]);
+  }, [appState.data, appState.page_manager]);
 
   const userHandler = (type: string) => {
     handleEmmit && handleEmmit(type);
@@ -46,7 +46,7 @@ const Layout = ({ children, handleEmmit }: ILayout) => {
             <Flex justify={'start'} gap={'2'}>
               <img src={currentIcon} alt={`icon`} className="h-5 w-5" />
               <div
-                className="overflow-hidden whitespace-nowrap text-ellipsis"
+                className="overflow-hidden  text-ellipsis break-words line-clamp-1"
                 style={{ maxWidth: '350px' }}
               >
                 <Heading size={'3'}>{currentHeading}</Heading>
@@ -60,10 +60,14 @@ const Layout = ({ children, handleEmmit }: ILayout) => {
         </Box>
         <Box
           as="div"
-          className=" w-full"
+          className="w-full"
           style={{ background: 'var(--gray-2)', height: `calc(100% - 40px)` }}
         >
-          {children}
+          <div className="flex h-full">
+            {pageBar}
+
+            {children}
+          </div>
         </Box>
         {/* <Flex align={'center'} justify={'center'} as="div" className="h-[50px] bg-gray-200 flex items-center justify-center">
           页脚内容

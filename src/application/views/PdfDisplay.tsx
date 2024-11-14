@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
@@ -22,23 +22,19 @@ interface IPDFDisplayer {
 const PDFDisplay = (props: IPDFDisplayer) => {
   const { appState, setAppStatus } = useStateStore();
 
-  const updatePageManager = (numPages: number) => {
-    useStateStore.setState((prevState) =>
-      produce(prevState, (draft) => {
-        draft.appState.page_manager = {
-          total: numPages,
-          current: 1,
-        }; // 确保 page_manager 存在并更新 total
-      })
-    );
-  };
-
-  useEffect(() => {
-    console.log(appState);
-  }, [appState.page_manager]);
+  // const updatePageManager = (numPages: number) => {
+  //   useStateStore.setState((prevState) =>
+  //     produce(prevState, (draft) => {
+  //       draft.appState.page_manager = {
+  //         total: numPages,
+  //         current: 1,
+  //       }; // 确保 page_manager 存在并更新 total
+  //     })
+  //   );
+  // };
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    updatePageManager(numPages);
+    //updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
     console.log(appState);
 
@@ -51,10 +47,17 @@ const PDFDisplay = (props: IPDFDisplayer) => {
     }
   };
 
+  const checha_data = useMemo(() => {
+    if (appState.data?.length) {
+      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      return checha_data || null;
+    }
+  }, [appState.data, appState.page_manager]);
+
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
       <Document
-        file={appState.checha_data}
+        file={checha_data}
         className="pdf-document my-5 px-8"
         onLoadSuccess={onDocumentLoadSuccess}
       >

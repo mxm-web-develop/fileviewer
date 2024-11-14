@@ -4,11 +4,11 @@ import { Options, renderAsync } from 'docx-preview';
 import { useStateStore } from '../store';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
-import './wordStyle.css'
+import './wordStyle.css';
 interface WordsDisplayProps {
   width?: number;
   scale?: number;
-  handlePageItemClicked?: any
+  handlePageItemClicked?: any;
 }
 
 const options = {
@@ -25,9 +25,8 @@ const options = {
   trimXmlDeclaration: true,
   renderFootnotes: false,
   renderChanges: true,
-  renderComments: false
+  renderComments: false,
 };
-
 
 const WordsDisplay: React.FC<WordsDisplayProps> = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +35,9 @@ const WordsDisplay: React.FC<WordsDisplayProps> = () => {
   // const [pageHeights, setPageHeights] = useState<number[]>([]);
 
   useEffect(() => {
-    if (appState.checha_data && containerRef.current) {
+    if (appState.data?.length && containerRef.current) {
+      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      if (!checha_data) return;
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
         const arrayBuffer = e.target?.result as ArrayBuffer;
@@ -44,32 +45,31 @@ const WordsDisplay: React.FC<WordsDisplayProps> = () => {
         // 使用 setTimeout 确保 DOM 元素已渲染
         setTimeout(() => {
           if (containerRef.current) {
-            renderAsync(arrayBuffer, containerRef.current, containerRef.current, options).then(() => {
-              const height = containerRef.current!.scrollHeight;
-              setDocHeight(height);
-              setAppStatus(AppStatus.LOADED);
-            }).catch(err => {
-              console.error(err);
-            });
+            renderAsync(arrayBuffer, containerRef.current, containerRef.current, options)
+              .then(() => {
+                const height = containerRef.current!.scrollHeight;
+                setDocHeight(height);
+                setAppStatus(AppStatus.LOADED);
+              })
+              .catch((err) => {
+                console.error(err);
+              });
           }
         }, 0);
       };
 
       try {
-        fileReader.readAsArrayBuffer(appState.checha_data);
+        fileReader.readAsArrayBuffer(checha_data);
       } catch (err) {
         console.error(err);
       }
     }
-  }, [appState.checha_data]);
+  }, [appState.data, appState.page_manager]);
 
   return (
     <ScrollArea>
-      <div ref={containerRef}  >
-        {/* 渲染的 DOCX 内容将插入到这里 */}
-      </div>
+      <div ref={containerRef}>{/* 渲染的 DOCX 内容将插入到这里 */}</div>
     </ScrollArea>
-
   );
 };
 
