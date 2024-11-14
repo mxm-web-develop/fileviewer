@@ -23,7 +23,7 @@ export const HtmlDisplay = ({ width }: any) => {
   }, [appState.data, appState.page_manager]);
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full relative overflow-y-auto">
       {htmlContent && (
         <div
           style={{ width: '850px!important', boxSizing: 'border-box' }} // 确保内容宽度为100%

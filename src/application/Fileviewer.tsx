@@ -229,8 +229,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
             }
           >
             <div
-              className="w-[1000px] h-full flex justify-center bg-[#f3f4f5]"
-              style={{ width: appState.data.length > 1 ? '1000px' : '1200px' }}
+              className="flex-1 h-full flex justify-center bg-[#f3f4f5]"
+              style={{ width: appState.data.length > 1 ? '900px' : '1100px' }}
             >
               {appState.status === AppStatus.UNLOAD && (
                 <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
@@ -242,7 +242,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
                   加载数据成功，渲染文件中
                 </div>
               )}
-              <div className="bg-white h-full w-[850px]">{renderFile()}</div>
+              <div className="bg-white h-full w-full ">{renderFile()}</div>
             </div>
           </Layout>
         </div>
