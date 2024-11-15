@@ -8,6 +8,7 @@ const TextDisplay = ({ width }: { width: string | number }) => {
   const { appState, setAppStatus } = useStateStore();
 
   useEffect(() => {
+    console.log(appState.data)
     if (appState.data.length && containerRef.current) {
       const reader = new FileReader();
       reader.onload = (e) => {

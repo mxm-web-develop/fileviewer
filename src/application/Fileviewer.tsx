@@ -66,6 +66,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
       const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
       const responses = await Promise.all(fetchPromises);
 
+
       // Check if any response has status other than 200
       responses.forEach((response, index) => {
         if (!response.ok) {
@@ -76,7 +77,6 @@ export const useFileViewer = (props: IUseFileViewer) => {
           throw new Error(`Error fetching file at index ${index}: ${response.statusText}`);
         }
       });
-
       const blobPromises = responses.map((response) => response.blob());
       const r = await Promise.all(blobPromises)
       setAppState((pre) => {
