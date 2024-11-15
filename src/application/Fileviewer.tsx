@@ -228,11 +228,10 @@ export const useFileViewer = (props: IUseFileViewer) => {
                 加载数据成功，渲染文件中
               </div>
             )}
-            <div className="bg-white h-full w-full flex items-center justify-center">
+            <div className="bg-slate-100 h-full w-full flex items-center justify-center">
               {
                 Array.isArray(fileUrl) && <div className='multiFile-nav w-[145px] h-full'>
                   <ScrollArea
-
                     style={{ height: '100%' }}
                   >
                     <MultiFileNav />
