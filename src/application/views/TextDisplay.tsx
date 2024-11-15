@@ -8,7 +8,7 @@ const TextDisplay = ({ width }: { width: string | number }) => {
   const { appState, setAppStatus } = useStateStore();
 
   useEffect(() => {
-    if (appState.data.length && appState.data[0].checha_data && containerRef.current) {
+    if (appState.data.length && containerRef.current) {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result && containerRef.current && typeof e.target.result === 'string') {
@@ -23,10 +23,11 @@ const TextDisplay = ({ width }: { width: string | number }) => {
         console.error('文件读取失败:', error);
         setAppStatus(AppStatus.ERROR);
       };
-      reader.readAsText(appState.data[0].checha_data);
+      const currentFileData = appState.data.find((item) => item.id === appState.current_file);
+      reader.readAsText(currentFileData?.checha_data);
       setAppStatus(AppStatus.LOADED);
     }
-  }, [appState.data, setAppStatus]);
+  }, [appState.data, appState.current_file, setAppStatus]);
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>

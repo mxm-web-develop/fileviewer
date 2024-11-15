@@ -28,11 +28,9 @@ function findLongestNumberLength(matrix: any[]) {
 const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
   const [sheets, setSheets] = useState<string[]>([]);
   const [rows, setRows] = useState<any[][]>([]);
-  const [merges, setMerges] = useState<any[]>([]);
   const [selectedSheet, setSelectedSheet] = useState<string>('');
   const { appState, setAppStatus } = useStateStore();
   const [workbook, setWorkbook] = useState<XLSX.WorkBook | null>(null);
-  const [cellStyles, setCellStyles] = useState<any>();
   const [tableHeight, setTableHeight] = useState<number>(0); // 用于存储表格高度
   const hotTableRef = useRef<HotTableClass>(null); // 引入 ref
   const tableContainer = useRef<HTMLDivElement>(null); // 添加 ref
@@ -66,7 +64,8 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
 
   useEffect(() => {
     if (appState.data?.length) {
-      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      const currentFileData = appState.data.find((item) => item.id === appState.current_file);
+      const checha_data = currentFileData?.checha_data;
       if (!checha_data) return;
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
@@ -90,7 +89,7 @@ const XlsxDisplay: React.FC<XlsxDisplayProps> = ({ width }) => {
         console.error(err);
       }
     }
-  }, [appState.data, appState.page_manager]);
+  }, [appState.data, appState.current_file]);
 
   const updateSheetData = (worksheet: XLSX.WorkSheet) => {
     let jsonData = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });

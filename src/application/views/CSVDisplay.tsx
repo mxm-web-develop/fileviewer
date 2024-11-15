@@ -40,7 +40,8 @@ const CsvDisplay: React.FC<CsvDisplayProps> = ({ width }) => {
 
   useEffect(() => {
     if (appState.data?.length) {
-      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      const currentFileData = appState.data.find((item) => item.id === appState.current_file);
+      const checha_data = currentFileData?.checha_data;
       if (!checha_data) return;
       Papa.parse(checha_data, {
         complete: (results) => {
@@ -51,7 +52,7 @@ const CsvDisplay: React.FC<CsvDisplayProps> = ({ width }) => {
       });
       setAppStatus(AppStatus.LOADED);
     }
-  }, [appState.data, appState.page_manager]);
+  }, [appState.data, appState.current_file]);
 
   const columnHeaders = useMemo(() => rows[0] || [], [rows]);
 
