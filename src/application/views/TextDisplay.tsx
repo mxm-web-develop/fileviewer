@@ -14,7 +14,6 @@ const TextDisplay = ({ width }: { width: string | number }) => {
         if (e.target?.result && containerRef.current && typeof e.target.result === 'string') {
           containerRef.current.innerText = e.target.result;
           console.log('文件内容:', e.target.result); // 打印文件内容，确保解析正确
-
           // 检查并设置字体（模拟字由字体应用）
           containerRef.current.style.fontFamily = 'sans-serif';
         }
@@ -31,8 +30,8 @@ const TextDisplay = ({ width }: { width: string | number }) => {
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
-      <Box px={'5'} py={'3'} style={{ width: '100%', height: '100%' }}>
-        <article ref={containerRef} className="prose" />
+      <Box px={'5'} py={'3'} className='max-w-[720px] text-wrap mx-auto'>
+        <article ref={containerRef} className="prose px-3  break-words !text-wrap" />
       </Box>
     </ScrollArea>
   );

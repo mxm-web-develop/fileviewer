@@ -66,6 +66,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
       const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
       const responses = await Promise.all(fetchPromises);
 
+
       // Check if any response has status other than 200
       responses.forEach((response, index) => {
         if (!response.ok) {
@@ -76,7 +77,6 @@ export const useFileViewer = (props: IUseFileViewer) => {
           throw new Error(`Error fetching file at index ${index}: ${response.statusText}`);
         }
       });
-
       const blobPromises = responses.map((response) => response.blob());
       const r = await Promise.all(blobPromises)
       setAppState((pre) => {
@@ -228,7 +228,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
                 加载数据成功，渲染文件中
               </div>
             )}
-            <div className="bg-white h-full w-full flex items-center justify-center">
+            <div className="bg-slate-100 h-full w-full flex items-center justify-center">
               {
                 Array.isArray(fileUrl) && fileUrl.length > 1 && <div className='multiFile-nav w-[145px] h-full'>
                   <ScrollArea

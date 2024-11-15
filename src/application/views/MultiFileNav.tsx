@@ -1,7 +1,8 @@
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+
 import { useStateStore } from '../store';
 import { useCallback, useMemo } from 'react'; // 引入 useMemo
-import { ScrollArea } from "@/components/ui/scroll-area";
+import activeIcon from '/icons/actived.png';
+import unactiveIcon from '/icons/unactived.png';
 import { cn } from "@/lib/utils";
 const MultiFileNav = () => {
   const { appState, setAppState } = useStateStore();
@@ -27,9 +28,16 @@ const MultiFileNav = () => {
               });
             }}
           >
-            <span className=" px-2  max-h-[10px] py-3 line-clamp-1  text-ellipsis" >
-              {item.file_name}
-            </span>
+            <div className="flex items-center justify-start">
+              {
+                isActived(item.id) ? <img src={activeIcon} className='w-[16px] ' /> :
+                  <img src={unactiveIcon} className='w-[16px] ' />
+              }
+              <span className="  max-h-[20px] line-clamp-1  text-ellipsis" >
+                {item.file_name}
+              </span>
+            </div>
+
           </div>
         );
       })}

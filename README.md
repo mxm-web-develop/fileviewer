@@ -21,6 +21,8 @@
 
 ## 注意事项
 
+https://registry.npmjs.org/
+
 - npm 镜像下载依赖时： `npm config set registry https://registry.npm.taobao.org` 发布包时：
   `npm config set registry https://registry.npmjs.org` 验证当前设置： `npm config get registry`
 
