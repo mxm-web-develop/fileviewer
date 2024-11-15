@@ -8,7 +8,7 @@ const TextDisplay = ({ width }: { width: string | number }) => {
   const { appState, setAppStatus } = useStateStore();
 
   useEffect(() => {
-    if (appState.data.length && containerRef.current) {
+    if (appState.data.length && appState.data[0].checha_data && containerRef.current) {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result && containerRef.current && typeof e.target.result === 'string') {
