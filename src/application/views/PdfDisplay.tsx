@@ -22,19 +22,19 @@ interface IPDFDisplayer {
 const PDFDisplay = (props: IPDFDisplayer) => {
   const { appState, setAppStatus } = useStateStore();
 
-  // const updatePageManager = (numPages: number) => {
-  //   useStateStore.setState((prevState) =>
-  //     produce(prevState, (draft) => {
-  //       draft.appState.page_manager = {
-  //         total: numPages,
-  //         current: 1,
-  //       }; // 确保 page_manager 存在并更新 total
-  //     })
-  //   );
-  // };
+  const updatePageManager = (numPages: number) => {
+    useStateStore.setState((prevState) =>
+      produce(prevState, (draft) => {
+        draft.appState.page_manager = {
+          total: numPages,
+          current: 1,
+        }; // 确保 page_manager 存在并更新 total
+      })
+    );
+  };
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    //updatePageManager(numPages);
+    updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
     console.log(appState);
 
@@ -49,10 +49,13 @@ const PDFDisplay = (props: IPDFDisplayer) => {
 
   const checha_data = useMemo(() => {
     if (appState.data?.length) {
-      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
-      return checha_data || null;
+      const currentFileData = appState.data.find((item) => item.id === appState.current_file);
+      if (currentFileData) {
+        return currentFileData.checha_data;
+      }
+      return null;
     }
-  }, [appState.data, appState.page_manager]);
+  }, [appState.data, appState.current_file]);
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>

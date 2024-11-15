@@ -36,7 +36,8 @@ const WordsDisplay: React.FC<WordsDisplayProps> = () => {
 
   useEffect(() => {
     if (appState.data?.length && containerRef.current) {
-      const checha_data = appState.data[appState.page_manager.current - 1].checha_data;
+      const currentFileData = appState.data.find((item) => item.id === appState.current_file);
+      const checha_data = currentFileData?.checha_data;
       if (!checha_data) return;
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
@@ -64,7 +65,7 @@ const WordsDisplay: React.FC<WordsDisplayProps> = () => {
         console.error(err);
       }
     }
-  }, [appState.data, appState.page_manager]);
+  }, [appState.data, appState.current_file]);
 
   return (
     <ScrollArea>
