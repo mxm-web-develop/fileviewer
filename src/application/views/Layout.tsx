@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Box, Flex, Heading } from '@radix-ui/themes';
 import { useStateStore } from '../store';
 import TxtIcon from '../assets/txt.png';
@@ -7,6 +7,7 @@ import ImgIcon from '../assets/img.png';
 import PdfIcon from '../assets/pdf.png';
 import WordIcon from '../assets/word.png';
 import PptIcon from '../assets/ppt.png';
+import { cn } from '@udecode/cn'
 import { Cross2Icon, SizeIcon, PlusCircledIcon, MinusCircledIcon } from '@radix-ui/react-icons';
 const typeIcons: { [key: string]: string } = {
   csv: TableIcon,
@@ -68,17 +69,18 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
             </Flex>
           </Flex>
         </Box>
-        <Box
-          as="div"
-          className="w-full"
+        <div
+          className=" relative"
           style={{ background: 'var(--gray-2)', height: `calc(100% - 40px)` }}
         >
-          <div className="flex h-full">
-            {pageBar}
+          <div className={cn(" h-full w-full relative", {
+            'justify-center items-center': !Array.isArray(appState.data)
+          })}>
+            {Array.isArray(appState.data) && pageBar}
 
             {children}
           </div>
-        </Box>
+        </div>
         {/* <Flex align={'center'} justify={'center'} as="div" className="h-[50px] bg-gray-200 flex items-center justify-center">
           页脚内容
         </Flex> */}

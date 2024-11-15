@@ -33,6 +33,7 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     base: './',
+
     plugins: [
       resolve(),
       commonjs(),
@@ -75,7 +76,7 @@ export default ({ mode }: { mode: string }) => {
     ],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src'),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     esbuild: {

@@ -8,7 +8,7 @@ import XlsxDisplay from './views/XlsxDisplay';
 import WordsDisplay from './views/WordsDisplay';
 import PDFDisplay from './views/PdfDisplay';
 import Layout from './views/Layout';
-import { Blockquote, Theme } from '@radix-ui/themes';
+import { Blockquote, ScrollArea, Theme } from '@radix-ui/themes';
 import { AppStatus, ParsedFileItem } from './store/system.type';
 import { useStateStore } from './store';
 //import PDFDisplay from "./views/PdfDisplay";
@@ -17,6 +17,9 @@ import { HtmlDisplay } from './views/HtmlDisplay';
 import { registerAllModules } from 'handsontable/registry';
 import { IUseFileViewer } from './types/system';
 import { ImgDisplay } from './views/ImgDisplay';
+import { cn } from '@/lib/utils';
+import MultiFileNav from './views/MultiFileNav';
+import { uid } from 'uid';
 
 registerAllModules();
 
@@ -33,7 +36,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
     display_file_type,
     form,
   } = props;
-
+  if (Array.isArray(fileUrl) && !form) {
+    throw new Error("多文件格式必须使用form传参指定解析格式.");
+  }
   const { appState, setAppState } = useStateStore();
 
   const getStatus = (fileExtension: string) => {
@@ -58,11 +63,10 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const fetchFile = async (fileUrls: any[]) => {
     try {
-      const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }));
+      const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
       const responses = await Promise.all(fetchPromises);
       const blobPromises = responses.map((response) => response.blob());
       const r = await Promise.all(blobPromises);
-
       setAppState((pre) => {
         const { data: oldData } = pre;
         const curStatus = getStatus(pre.parse_form);
@@ -75,6 +79,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
           ...pre,
           data: oldData,
           status: curStatus,
+          current_file: oldData[0]?.id,
         };
       });
     } catch (error) {
@@ -84,60 +89,51 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const initArrayFile = (fileUrlArray: any[]) => {
     const arr: ParsedFileItem[] = [];
-    fileUrlArray.forEach((url: string) => {
+    fileUrlArray.forEach((url: string, index: number) => {
+      const id = uid(8)
       const { fileName, parse_form } = dealUrl(url);
       arr.push({
         file_form: parse_form,
         file_url: url,
         file_name: fileName,
-        id: '0',
+        id: id,
         status: AppStatus.UNLOAD,
       });
     });
-    setAppState((pre) =>
-      produce(pre, (draft) => {
-        return {
-          ...draft,
-          parse_form: arr[0].file_form,
+    setAppState((pre) => {
+      return (
+        {
+          ...pre,
+          parse_form: form,
           display_file_type: display_file_type || pre.display_file_type,
           file_url: fileUrlArray,
-          page_manager: {
-            total: arr.length,
-            current: 1,
-          },
+          current_file: arr[0].id,
           data: arr,
-        };
-      })
-    );
-
+        }
+      )
+    })
     fetchFile(arr);
   };
 
   const initStringFile = (fileUrl: string) => {
     const { fileName, parse_form } = dealUrl(fileUrl);
-    setAppState((pre) =>
-      produce(pre, (draft) => {
-        return {
-          ...draft,
-          parse_form: parse_form,
-          file_url: fileUrl,
-          display_file_type: display_file_type || pre.display_file_type,
-          page_manager: {
-            total: 1,
-            current: 1,
+    setAppState((pre) => {
+      return {
+        ...pre,
+        parse_form: parse_form,
+        file_url: fileUrl,
+        display_file_type: display_file_type || pre.display_file_type,
+        data: [
+          {
+            file_form: parse_form,
+            file_url: fileUrl,
+            file_name: fileName,
+            id: '0',
+            status: AppStatus.UNLOAD,
           },
-          data: [
-            {
-              file_form: parse_form,
-              file_url: fileUrl,
-              file_name: fileName,
-              id: '0',
-              status: AppStatus.UNLOAD,
-            },
-          ],
-        };
-      })
-    );
+        ],
+      };
+    });
 
     fetchFile([{ file_url: fileUrl, file_form: parse_form }]);
   };
@@ -151,6 +147,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   };
 
   const renderFile = () => {
+
     switch (appState.parse_form) {
       case 'pdf':
         return (
@@ -193,67 +190,47 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   return {
     Element: (
-      <Theme asChild {...theme} style={{ minHeight: '100%' }}>
-        <div className="relative h-full w-full">
-          <Layout
-            handleEmmit={props.actionOnEmmit && props.actionOnEmmit}
-            handleEvent={handleEvent}
-            pageBar={
-              appState.data.length > 1 ? (
-                <div className="w-[200px] h-full bg-white overflow-y-auto overflow-x-hidden">
-                  {appState.data.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="h-[120px] w-full flex justify-center items-center cursor-pointer"
-                        style={{
-                          borderBottom: '1px solid #f3f4f5',
-                          borderRight: '1px solid #f3f4f5',
-                          backgroundColor:
-                            appState.page_manager.current === index + 1 ? '#f3f4f5' : '#fff',
-                        }}
-                        onClick={() => {
-                          setAppState((pre) =>
-                            produce(pre, (draft) => {
-                              return {
-                                ...draft,
-                                page_manager: {
-                                  ...draft.page_manager,
-                                  current: index + 1,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                      >
-                        <div className="h-[80px] w-[160px] text-ellipsis break-words line-clamp-4 text-[#2a2a2a] text-[14px]">
-                          {item.file_name}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <></>
-              )
+      // <Theme asChild {...theme}>
+      <div className="relative h-full w-full overflow-hidden">
+        <Layout
+          handleEmmit={props.actionOnEmmit && props.actionOnEmmit}
+          handleEvent={handleEvent}
+        >
+          <div className={cn("w-full h-full flex justify-center bg-[#f3f4f5]", {
+            'w-600px': Array.isArray(fileUrl)
+          })}>
+            {appState.status === AppStatus.UNLOAD && (
+              <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
+                加载文件中
+              </div>
+            )}
+
+            {appState.status === AppStatus.ERROR && (
+              <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
+                网络错误,请稍后重试
+              </div>
+            )
             }
-          >
-            <div className="w-[calc(100%-200px)] h-full flex justify-center bg-[#f3f4f5]">
-              {appState.status === AppStatus.UNLOAD && (
-                <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
-                  加载文件中
-                </div>
-              )}
-              {appState.status === AppStatus.FETCHED && (
-                <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
-                  加载数据成功，渲染文件中
-                </div>
-              )}
-              <div className="bg-white h-full w-full">{renderFile()}</div>
+            {appState.status === AppStatus.FETCHED && (
+              <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
+                加载数据成功，渲染文件中
+              </div>
+            )}
+            <div className="bg-white h-full w-full flex items-center justify-center">
+              <div className='multiFile-nav w-[145px] h-full'>
+                <ScrollArea
+
+                  style={{ height: '100%' }}
+                >
+                  <MultiFileNav />
+                </ScrollArea>
+              </div>
+              {renderFile()}
             </div>
-          </Layout>
-        </div>
-      </Theme>
+          </div>
+        </Layout>
+      </div>
+      // </Theme>
     ),
   };
 };

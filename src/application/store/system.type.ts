@@ -27,9 +27,12 @@ export interface AppStatev1029 {
   file_url: string[] | string;
   parse_form: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf' | string;
   display_file_type?: 'docx' | 'cvs' | 'html' | 'txt' | 'img' | 'pdf' | 'xslx' | string;
+  //多文件状态下控制文件切换
+  current_file?: string;
   //用于管理应用的状态
   status: AppStatus;
   data: ParsedFileItem[];
+
   page_manager: {
     total: number;
     current: number;
