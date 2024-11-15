@@ -30,6 +30,8 @@ https://registry.npmjs.org/
 
 -      `yarn config set registry https://registry.npm.taobao.org` ， 最好用yarn镜像来下载，npm保持官网方便进行发布
 
+  npm config set proxy http://12.0.0.1:7890 npm config set https-proxy http://12.0.0.1:7890
+
 ## 打包流程
 
 - 激活打包命令
