@@ -22,11 +22,12 @@ export const HtmlDisplay = ({ width }: any) => {
   }, [appState.data, appState.current_file]);
 
   return (
-    <div className="h-full w-full mx-auto relative overflow-y-auto">
+    <div className="h-full w-full  mx-auto relative overflow-y-auto">
       {htmlContent && (
-        <div
-          style={{ boxSizing: 'border-box' }} // 确保内容宽度为100%
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        <iframe
+          className="h-full w-full mx-auto"
+          style={{ border: 'none' }}
+          srcDoc={htmlContent}
         />
       )}
     </div>

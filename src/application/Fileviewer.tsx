@@ -230,9 +230,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
             )}
             <div className="bg-white h-full w-full flex items-center justify-center">
               {
-                Array.isArray(fileUrl) && <div className='multiFile-nav w-[145px] h-full'>
+                Array.isArray(fileUrl) && fileUrl.length > 1 && <div className='multiFile-nav w-[145px] h-full'>
                   <ScrollArea
-
                     style={{ height: '100%' }}
                   >
                     <MultiFileNav />

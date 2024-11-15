@@ -27,7 +27,8 @@ function Preview() {
     //   'http://10.64.7.145:9000/dev-brain-data/demoLib/测试预览PPTslides_20.html'],
     // form: 'html',
 
-    fileUrl: ['/files/1.html', 'files/aaa.html'], form: 'html',
+    // fileUrl: ['/files/1.html', 'files/aaa.html'], form: 'html',
+    fileUrl: ['/files/2.html', '/files/1.html'], form: 'html',
     // fileUrl: [
     //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_n%E6%A1%88IWT%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88%E6%A1%88%E4%BE%8B%E5%BA%93/V0/n%E6%A1%88IWT_%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88-%E6%A1%88%E4%BE%8B%E5%BA%93.xlsx',
     //   'http://10.15.12.12:9000/dev-rag-data/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95/%E5%8E%9F%E6%96%87%E8%A7%A3%E6%9E%90%E9%A2%84%E8%A7%88%E6%B5%8B%E8%AF%95_n%E6%A1%88IWT%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88%E6%A1%88%E4%BE%8B%E5%BA%93/V0/n%E6%A1%88IWT_%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88-%E6%A1%88%E4%BE%8B%E5%BA%93.xlsx',
