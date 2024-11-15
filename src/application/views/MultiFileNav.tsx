@@ -28,7 +28,7 @@ const MultiFileNav = () => {
               });
             }}
           >
-            <div className="flex items-center justify-start">
+            <div className="flex gap-x-2 items-center justify-start">
               {
                 isActived(item.id) ? <img src={activeIcon} className='w-[16px] ' /> :
                   <img src={unactiveIcon} className='w-[16px] ' />
