@@ -15,7 +15,6 @@ export const HtmlDisplay = ({ width }: any) => {
       reader.onload = () => {
         const content = reader.result as string;
         setHtmlContent(content);
-        console.log(content);
         setAppStatus(AppStatus.LOADED);
       };
       reader.readAsText(blob); // 将 Blob 读取为文本

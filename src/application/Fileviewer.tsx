@@ -8,7 +8,7 @@ import XlsxDisplay from './views/XlsxDisplay';
 import WordsDisplay from './views/WordsDisplay';
 import PDFDisplay from './views/PdfDisplay';
 import Layout from './views/Layout';
-import { Blockquote, Theme } from '@radix-ui/themes';
+import { Blockquote, ScrollArea, Theme } from '@radix-ui/themes';
 import { AppStatus, ParsedFileItem } from './store/system.type';
 import { useStateStore } from './store';
 //import PDFDisplay from "./views/PdfDisplay";
@@ -201,37 +201,46 @@ export const useFileViewer = (props: IUseFileViewer) => {
             pageBar={
               appState.data.length > 1 ? (
                 <div className="w-[200px] h-full bg-white overflow-y-auto overflow-x-hidden">
-                  {appState.data.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="h-[120px] w-full flex justify-center items-center cursor-pointer"
-                        style={{
-                          borderBottom: '1px solid #f3f4f5',
-                          borderRight: '1px solid #f3f4f5',
-                          backgroundColor:
-                            appState.page_manager.current === index + 1 ? '#f3f4f5' : '#fff',
-                        }}
-                        onClick={() => {
-                          setAppState((pre) =>
-                            produce(pre, (draft) => {
-                              return {
-                                ...draft,
-                                page_manager: {
-                                  ...draft.page_manager,
-                                  current: index + 1,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                      >
-                        <div className="h-[80px] w-[160px] text-ellipsis break-words line-clamp-4 text-[#2a2a2a] text-[14px]">
-                          {item.file_name}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <ScrollArea
+                    type="scroll"
+                    scrollbars="vertical"
+                    size={'2'}
+                    style={{ height: '100%' }}
+                  >
+                    <div>
+                      {appState.data.map((item, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="h-[120px] w-full flex justify-center items-center cursor-pointer"
+                            style={{
+                              borderBottom: '1px solid #f3f4f5',
+                              borderRight: '1px solid #f3f4f5',
+                              backgroundColor:
+                                appState.page_manager.current === index + 1 ? '#f3f4f5' : '#fff',
+                            }}
+                            onClick={() => {
+                              setAppState((pre) =>
+                                produce(pre, (draft) => {
+                                  return {
+                                    ...draft,
+                                    page_manager: {
+                                      ...draft.page_manager,
+                                      current: index + 1,
+                                    },
+                                  };
+                                })
+                              );
+                            }}
+                          >
+                            <div className="h-[80px] w-[160px] text-ellipsis break-words line-clamp-4 text-[#2a2a2a] text-[14px]">
+                              {item.file_name}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
                 </div>
               ) : (
                 <></>

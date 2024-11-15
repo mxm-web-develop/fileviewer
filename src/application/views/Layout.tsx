@@ -56,14 +56,14 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
             <Flex gap={'3'}>
               {/* <SizeIcon cursor={'pointer'}  /> */}
 
-              <PlusCircledIcon
+              {/* <PlusCircledIcon
                 cursor={'pointer'}
                 onClick={() => handleEvent && handleEvent('plus')}
               />
               <MinusCircledIcon
                 cursor={'pointer'}
                 onClick={() => handleEvent && handleEvent('minus')}
-              />
+              /> */}
               <Cross2Icon cursor={'pointer'} onClick={() => userHandler('close')} />
             </Flex>
           </Flex>
