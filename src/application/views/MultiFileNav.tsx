@@ -33,7 +33,7 @@ const MultiFileNav = () => {
                 isActived(item.id) ? <img src={activeIcon} className='w-[16px] ' /> :
                   <img src={unactiveIcon} className='w-[16px] ' />
               }
-              <span className=" px-2  max-h-[10px] py-3 line-clamp-1  text-ellipsis" >
+              <span className="  max-h-[20px] line-clamp-1  text-ellipsis" >
                 {item.file_name}
               </span>
             </div>

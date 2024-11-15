@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
@@ -59,22 +59,24 @@ const PDFDisplay = (props: IPDFDisplayer) => {
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
-      <Document
-        file={checha_data}
-        className="pdf-document my-5 px-8"
-        onLoadSuccess={onDocumentLoadSuccess}
-      >
-        <div className="flex flex-col gap-y-3">
-          {Array.from(new Array(appState.page_manager?.total), (el, index) => (
-            <Page
-              key={`page_${index + 1}`}
-              pageNumber={index + 1}
-              width={props.width}
-              scale={props.scale}
-            />
-          ))}
-        </div>
-      </Document>
+      <div className=' max-w-[760px] mx-auto'>
+        <Document
+          file={checha_data}
+          className="pdf-document my-5 px-8"
+          onLoadSuccess={onDocumentLoadSuccess}
+        >
+          <div className="flex flex-col gap-y-3">
+            {Array.from(new Array(appState.page_manager?.total), (el, index) => (
+              <Page
+                key={`page_${index + 1}`}
+                pageNumber={index + 1}
+                width={props.width}
+                scale={props.scale}
+              />
+            ))}
+          </div>
+        </Document>
+      </div>
     </ScrollArea>
   );
 };
