@@ -229,15 +229,22 @@ export const useFileViewer = (props: IUseFileViewer) => {
               </div>
             )}
             <div className="bg-white h-full w-full flex items-center justify-center">
-              <div className='multiFile-nav w-[145px] h-full'>
-                <ScrollArea
+              {
+                Array.isArray(fileUrl) && <div className='multiFile-nav w-[145px] h-full'>
+                  <ScrollArea
 
-                  style={{ height: '100%' }}
-                >
-                  <MultiFileNav />
-                </ScrollArea>
+                    style={{ height: '100%' }}
+                  >
+                    <MultiFileNav />
+                  </ScrollArea>
+                </div>
+              }
+              <div className={cn('w-full h-full relative', {
+                'w-[calc(100%-145px)]': Array.isArray(fileUrl)
+              })}>
+                {renderFile()}
               </div>
-              {renderFile()}
+
             </div>
           </div>
         </Layout>
