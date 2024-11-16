@@ -1,9 +1,9 @@
 
 import { useStateStore } from '../store';
 import { useCallback, useMemo } from 'react'; // 引入 useMemo
-import activeIcon from '/icons/actived.png';
-import unactiveIcon from '/icons/unactived.png';
+
 import { cn } from "@/lib/utils";
+import { FileText, Play } from 'lucide-react';
 const MultiFileNav = () => {
   const { appState, setAppState } = useStateStore();
   // 使用 useMemo 记录当前激活的文件
@@ -30,8 +30,7 @@ const MultiFileNav = () => {
           >
             <div className="flex gap-x-2 items-center justify-start">
               {
-                isActived(item.id) ? <img src={activeIcon} className='w-[16px] ' /> :
-                  <img src={unactiveIcon} className='w-[16px] ' />
+                isActived(item.id) ? <Play color='#000000' size={16} /> : <FileText size={16} color='#ffffff' />
               }
               <span className="  max-h-[20px] line-clamp-1  text-ellipsis" >
                 {item.file_name}

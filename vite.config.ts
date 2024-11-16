@@ -91,7 +91,7 @@ export default ({ mode }: { mode: string }) => {
         fileName: (format) => `index.${format === 'es' ? 'js' : 'umd.js'}`,
       },
       rollupOptions: {
-        external: ['react', 'react-dom'],
+        external: ['react', 'react-dom', '/worker/pdf.worker.min.js', '/worker/pdf.worder.min.js'],
         input: {
           main: path.resolve(__dirname, 'src/application/lib_enter.ts'),
         },
