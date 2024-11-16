@@ -1,5 +1,4 @@
 import { ReactNode, useMemo } from 'react';
-import { Box, Flex, Heading } from '@radix-ui/themes';
 import { useStateStore } from '../store';
 import TxtIcon from '../assets/txt.png';
 import TableIcon from '../assets/excel.png';
@@ -8,7 +7,8 @@ import PdfIcon from '../assets/pdf.png';
 import WordIcon from '../assets/word.png';
 import PptIcon from '../assets/ppt.png';
 import { cn } from '@udecode/cn'
-import { Cross2Icon, SizeIcon, PlusCircledIcon, MinusCircledIcon } from '@radix-ui/react-icons';
+import { X } from 'lucide-react';
+
 const typeIcons: { [key: string]: string } = {
   csv: TableIcon,
   xls: TableIcon,
@@ -27,6 +27,12 @@ interface ILayout {
   pageBar?: ReactNode;
   handleEmmit?: (type: string) => any;
   handleEvent?: (type: string) => any;
+  render_width?: number
+  loading?: {
+    icon?: ReactNode,
+    fetch_text?: string,
+    rending_text?: string
+  }
 }
 const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
   const { appState } = useStateStore();
@@ -41,20 +47,20 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
     handleEmmit && handleEmmit(type);
   };
   return (
-    <Box className="h-full relative">
-      <Flex direction="column" className="h-full">
-        <Box width={'100%'} height={'40px'} className="relative z-10 px-4 bg-white shadow ">
-          <Flex align={'center'} justify={'between'} className=" h-full w-full    ">
-            <Flex justify={'start'} gap={'2'}>
+    <div className="h-full relative">
+      <div className="h-full flex-col">
+        <div className="w-full h-[40px]  box-border relative z-10 px-4 bg-white shadow ">
+          <div className=" h-full w-full flex  justify-between items-center   ">
+            <div className=' flex justify-start items-center gap-x-3'>
               <img src={currentIcon} alt={`icon`} className="h-5 w-5" />
               <div
                 className="overflow-hidden  text-ellipsis break-words line-clamp-1"
                 style={{ maxWidth: '350px' }}
               >
-                <Heading size={'3'}>{currentHeading}</Heading>
+                <p className=' font-bold text-md text-slate-900/70'>{currentHeading}</p>
               </div>
-            </Flex>
-            <Flex gap={'3'}>
+            </div>
+            <div className=' flex gap-x-3'>
               {/* <SizeIcon cursor={'pointer'}  /> */}
 
               {/* <PlusCircledIcon
@@ -65,10 +71,11 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
                 cursor={'pointer'}
                 onClick={() => handleEvent && handleEvent('minus')}
               /> */}
-              <Cross2Icon cursor={'pointer'} onClick={() => userHandler('close')} />
-            </Flex>
-          </Flex>
-        </Box>
+              <X size={20} className=' cursor-pointer' onClick={() => userHandler('close')} />
+
+            </div>
+          </div>
+        </div>
         <div
           className=" relative"
           style={{ background: 'var(--gray-2)', height: `calc(100% - 40px)` }}
@@ -84,8 +91,8 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
         {/* <Flex align={'center'} justify={'center'} as="div" className="h-[50px] bg-gray-200 flex items-center justify-center">
           页脚内容
         </Flex> */}
-      </Flex>
-    </Box>
+      </div>
+    </div>
   );
 };
 

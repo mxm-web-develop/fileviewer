@@ -20,21 +20,22 @@ import { ImgDisplay } from './views/ImgDisplay';
 import { cn } from '@/lib/utils';
 import MultiFileNav from './views/MultiFileNav';
 import { uid } from 'uid';
+import Loading from './views/Loading';
+import ErrorComponent from './views/ErrorComponent';
 
 registerAllModules();
 
 export const useFileViewer = (props: IUseFileViewer) => {
   const {
-    theme = {
-      accentColor: 'indigo',
-      grayColor: 'gray',
-      panelBackground: 'solid',
-      scaling: '100%',
-      radius: 'full',
-    },
     fileUrl,
     display_file_type,
     form,
+    render_width,
+    render_scale,
+    LoadingComponent,
+    fetching_text,
+    rending_text,
+    error_text
   } = props;
   if (Array.isArray(fileUrl) && !form) {
     throw new Error("多文件格式必须使用form传参指定解析格式.");
@@ -163,25 +164,25 @@ export const useFileViewer = (props: IUseFileViewer) => {
     switch (appState.parse_form) {
       case 'pdf':
         return (
-          <PDFDisplay width={props.width || 800} scale={props.scale || 1} />
+          <PDFDisplay width={render_width || 800} scale={render_scale || 1} />
         ) as React.ReactNode;
       case 'docx':
         return (
-          <WordsDisplay width={props.width || 800} scale={props.scale || 1} />
+          <WordsDisplay width={render_width || 800} scale={render_scale || 1} />
         ) as React.ReactNode;
       case 'txt':
-        return <TextDisplay width={props.width || 800} />;
+        return <TextDisplay width={render_width || 800} />;
       case 'csv':
-        return <CsvDisplay width={props.width || 800} />;
+        return <CsvDisplay width={render_width || 800} />;
       case 'xls':
       case 'xlsx':
-        return <XlsxDisplay width={props.width || 800} />;
+        return <XlsxDisplay width={render_width || 800} />;
       case 'html':
-        return <HtmlDisplay width={props.width || 800} />;
+        return <HtmlDisplay width={render_width || 800} />;
       case 'jpeg':
       case 'jpg':
       case 'png':
-        return <ImgDisplay width={props.width || 800} />;
+        return <ImgDisplay width={render_width || 800} />;
       default:
         return <Blockquote>错误！未能成功解析文件</Blockquote>;
     }
@@ -213,19 +214,26 @@ export const useFileViewer = (props: IUseFileViewer) => {
           })}>
             {appState.status === AppStatus.UNLOAD && (
               <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
-                加载文件中
+                <div className=' flex-col items-center justify-center'>
+                  <div className='pb-3 text-slate-800/70'>{fetching_text ? fetching_text : '加载文件中'}</div>
+                  {LoadingComponent ? LoadingComponent : <Loading />}
+                </div>
+
               </div>
             )}
 
             {appState.status === AppStatus.ERROR && (
               <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
-                网络错误,请稍后重试
+                <ErrorComponent message={error_text || '应用报错了，请重试'} />
               </div>
             )
             }
             {appState.status === AppStatus.FETCHED && (
               <div className=" absolute top-0 left-0 h-full w-full flex items-center justify-center bg-gray-200 z-[100]">
-                加载数据成功，渲染文件中
+                <div className=' flex-col items-center justify-center'>
+                  <div className='pb-3 text-slate-800/70'>{fetching_text ? fetching_text : '加载文件中'}</div>
+                  {LoadingComponent ? LoadingComponent : <Loading />}
+                </div>
               </div>
             )}
             <div className="bg-slate-100 h-full w-full flex items-center justify-center">

@@ -9,11 +9,13 @@ import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
 // const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
 // import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  '/worker/pdf.worker.min.js',
-  import.meta.url
-).toString();
-
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   '/worker/pdf.worker.min.js',
+//   import.meta.url
+// ).toString();
+export function registerPDFWorker(workerUrl: string) {
+  pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+}
 interface IPDFDisplayer {
   width?: number;
   scale?: number;
@@ -36,7 +38,6 @@ const PDFDisplay = (props: IPDFDisplayer) => {
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
-    console.log(appState);
 
     // 检查并调整滚动位置
     const container = document.querySelector('.pdf-document');
@@ -46,7 +47,10 @@ const PDFDisplay = (props: IPDFDisplayer) => {
       container.scrollTop = pageHeight * 8; // 滚动到第9页的顶部
     }
   };
-
+  const onDocumentLoadError = (error: any) => {
+    console.error('Error loading PDF:', error);
+    setAppStatus(AppStatus.ERROR);
+  };
   const checha_data = useMemo(() => {
     if (appState.data?.length) {
       const currentFileData = appState.data.find((item) => item.id === appState.current_file);
@@ -58,19 +62,20 @@ const PDFDisplay = (props: IPDFDisplayer) => {
   }, [appState.data, appState.current_file]);
 
   return (
-    <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%' }}>
-      <div className=' max-w-[760px] mx-auto'>
+    <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%', width: '100%' }}>
+      <div className=' w-full mx-auto'>
         <Document
           file={checha_data}
           className="pdf-document my-5 px-8"
           onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onDocumentLoadError}
         >
           <div className="flex flex-col gap-y-3">
             {Array.from(new Array(appState.page_manager?.total), (el, index) => (
               <Page
                 key={`page_${index + 1}`}
                 pageNumber={index + 1}
-                width={props.width}
+                width={props.width || 660}
                 scale={props.scale}
               />
             ))}

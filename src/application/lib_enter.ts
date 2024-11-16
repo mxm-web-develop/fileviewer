@@ -1,2 +1,3 @@
 import { useFileViewer } from './Fileviewer';
-export { useFileViewer };
+import { registerPDFWorker } from './views/PdfDisplay';
+export { useFileViewer, registerPDFWorker };

@@ -104,13 +104,26 @@ export default ({ mode }: { mode: string }) => {
             // 'react-dom': 'ReactDOM',
           },
         },
-        // treeshake: true, // 启用 tree-shaking，减少无用代码
+        treeshake: true, // 启用 tree-shaking，减少无用代码
       },
     },
+
     server: {
       cors: true,
       host: '0.0.0.0',
       port: 8888,
+      proxy: {
+        '/local': {
+          target: 'http://192.168.2.8:8888',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/local/, ''),
+        },
+        '/api': {
+          target: 'https://www.pdf995.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
   });
 };
