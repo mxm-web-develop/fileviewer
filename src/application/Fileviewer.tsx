@@ -40,7 +40,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   }
   const { appState, setAppState } = useStateStore();
   // const netController = useStateStore(state => state.currentRequestAbortController)
-  // const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
+  const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
   const container = useRef(null)
   const getStatus = (fileExtension: string) => {
     switch (fileExtension) {
@@ -66,7 +66,12 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const fetchFile = async (fileUrls: any[]) => {
     try {
-      const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
+      const fetchPromises = fileUrls.map((item, index) => {
+        const controller = new AbortController();
+        // 使用 setCurrentRequestAbortController 方法来添加一个新的 AbortController 实例
+        setNetController(index.toString(), controller);
+        return fetch(item.file_url, { cache: 'no-store' })
+      })
       const responses = await Promise.all(fetchPromises);
       // Check if any response has status other than 200
       responses.forEach((response, index) => {
@@ -193,7 +198,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
     init(fileUrl);
 
 
-  }, [fileUrl]); // 添加 initialized 作为依赖项
+  }, []); // 添加 initialized 作为依赖项
 
 
 

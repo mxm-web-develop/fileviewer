@@ -37,16 +37,16 @@ export const HtmlDisplay = ({ width }: any) => {
 
   return (
     <div className="h-full w-full flex justify-center  mx-auto relative overflow-hidden">
-      {htmlContent && (
+      {/* {htmlContent && (
         <div
           key={id.current}
           className="h-full mx-auto"
           style={{ border: 'none', width: '100%' }}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
-      )}
+      )} */}
 
-      {/* {htmlContent && (
+      {htmlContent && (
         <iframe
           key={id.current}
           className="h-full mx-auto"
@@ -54,7 +54,7 @@ export const HtmlDisplay = ({ width }: any) => {
           style={{ border: 'none', width: '100%' }}
           srcDoc={htmlContent}
         />
-      )} */}
+      )}
     </div>
   );
 };

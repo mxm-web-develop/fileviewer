@@ -33,7 +33,7 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     base: './',
-    //publicDir: false,
+    publicDir: false,
     plugins: [
       resolve(),
       commonjs(),

@@ -1,12 +1,19 @@
 import { create } from 'zustand';
 import { AppStatev1029, AppStatus } from './system.type';
+import { enableMapSet } from 'immer';
 import { produce } from 'immer';
+enableMapSet();
 interface State {
   appState: AppStatev1029;
   setAppState: (state: (prevState: AppStatev1029) => Partial<AppStatev1029>) => void;
   setAppStatus: (status: AppStatus) => void;
-  currentRequestAbortController: AbortController | null;
-  setCurrentRequestAbortController: (controller: AbortController | null) => void;
+  currentRequestAbortControllers: Map<string, AbortController>;
+  // 修改 setCurrentRequestAbortController 方法以接受一个 id 和一个 AbortController 实例
+  setCurrentRequestAbortController: (id: string, controller: AbortController | null) => void;
+  // 添加一个新的方法来移除一个 AbortController 实例
+  //removeCurrentRequestAbortController: (id: string) => void;
+  // 添加一个新的方法来取消所有请求
+  abortAllRequests: () => void;
 }
 export const useStateStore = create<State>((set) => ({
   appState: {
@@ -20,7 +27,7 @@ export const useStateStore = create<State>((set) => ({
       current: 0,
     },
   },
-  currentRequestAbortController: null,
+  currentRequestAbortControllers: new Map(),
   setAppState: (state) =>
     set(
       produce((draft: State) => {
@@ -34,10 +41,23 @@ export const useStateStore = create<State>((set) => ({
         draft.appState.status = status;
       })
     ),
-  setCurrentRequestAbortController: (controller: AbortController | null) =>
+  setCurrentRequestAbortController: (id, controller) =>
     set(
       produce((draft: State) => {
-        draft.currentRequestAbortController = controller;
+        if (controller) {
+          draft.currentRequestAbortControllers.set(id, controller);
+        } else {
+          draft.currentRequestAbortControllers.delete(id);
+        }
+      })
+    ),
+  abortAllRequests: () =>
+    set(
+      produce((draft: State) => {
+        draft.currentRequestAbortControllers.forEach((controller) => {
+          controller.abort();
+        });
+        draft.currentRequestAbortControllers.clear();
       })
     ),
 }));

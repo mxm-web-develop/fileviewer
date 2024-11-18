@@ -14,7 +14,6 @@ import { ScrollArea } from '@radix-ui/themes';
 //   import.meta.url
 // ).toString();
 export function registerPDFWorker(workerUrl: string) {
-  console.log('11')
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 }
 interface IPDFDisplayer {
