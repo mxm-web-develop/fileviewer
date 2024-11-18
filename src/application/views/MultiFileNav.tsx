@@ -30,7 +30,7 @@ const MultiFileNav = () => {
           >
             <div className="flex gap-x-2 items-center justify-start">
               {
-                isActived(item.id) ? <Play color='#000000' size={16} /> : <FileText size={16} color='#ffffff' />
+                isActived(item.id) ? <Play color='#ffffff' size={16} /> : <FileText size={16} color='#000000' />
               }
               <span className="  max-h-[20px] line-clamp-1  text-ellipsis" >
                 {item.file_name}
