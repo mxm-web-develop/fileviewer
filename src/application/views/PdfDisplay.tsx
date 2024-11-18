@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
@@ -23,7 +23,6 @@ interface IPDFDisplayer {
 
 const PDFDisplay = (props: IPDFDisplayer) => {
   const { appState, setAppStatus } = useStateStore();
-
   const updatePageManager = (numPages: number) => {
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
@@ -34,7 +33,9 @@ const PDFDisplay = (props: IPDFDisplayer) => {
       })
     );
   };
-
+  useEffect(() => {
+    console.log(props.width)
+  }, [props.width])
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
@@ -63,7 +64,7 @@ const PDFDisplay = (props: IPDFDisplayer) => {
 
   return (
     <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%', width: '100%' }}>
-      <div className=' w-full mx-auto'>
+      <div className='w-full mx-auto' >
         <Document
           file={checha_data}
           className="pdf-document my-5 px-8"
@@ -75,7 +76,7 @@ const PDFDisplay = (props: IPDFDisplayer) => {
               <Page
                 key={`page_${index + 1}`}
                 pageNumber={index + 1}
-                width={props.width || 660}
+                width={props.width}
                 scale={props.scale}
               />
             ))}

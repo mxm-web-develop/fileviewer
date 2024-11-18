@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import './style.css';
 import '@radix-ui/themes/styles.css';
@@ -8,7 +8,7 @@ import XlsxDisplay from './views/XlsxDisplay';
 import WordsDisplay from './views/WordsDisplay';
 import PDFDisplay from './views/PdfDisplay';
 import Layout from './views/Layout';
-import { Blockquote, ScrollArea, Theme } from '@radix-ui/themes';
+import { Blockquote, ScrollArea } from '@radix-ui/themes';
 import { AppStatus, ParsedFileItem } from './store/system.type';
 import { useStateStore } from './store';
 //import PDFDisplay from "./views/PdfDisplay";
@@ -43,6 +43,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   const { appState, setAppState } = useStateStore();
 
   const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
+  const container = useRef(null)
   const getStatus = (fileExtension: string) => {
     switch (fileExtension) {
       case 'jpeg':
@@ -54,6 +55,13 @@ export const useFileViewer = (props: IUseFileViewer) => {
     }
   };
 
+
+  useEffect(() => {
+    if (container && container.current) {
+      console.dir(container.current)
+    }
+
+  }, [container])
   const dealUrl = (fileUrl: string) => {
     const urlParts = fileUrl.match(/\/([^\/?#]+)$/);
     const fileNameWithExtension = urlParts ? urlParts[1] : '';
@@ -162,12 +170,12 @@ export const useFileViewer = (props: IUseFileViewer) => {
     }
   };
 
-  const renderFile = () => {
+  const renderFile = (contianerWidth: number) => {
 
     switch (appState.parse_form) {
       case 'pdf':
         return (
-          <PDFDisplay width={render_width || 800} scale={render_scale || 1} />
+          <PDFDisplay width={render_width || contianerWidth - 60} scale={render_scale || 1} />
         ) as React.ReactNode;
       case 'docx':
         return (
@@ -181,7 +189,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
       case 'xlsx':
         return <XlsxDisplay width={render_width || 800} />;
       case 'html':
-        return <HtmlDisplay width={render_width || 800} />;
+        return <HtmlDisplay width={render_width || contianerWidth - 60} />;
       case 'jpeg':
       case 'jpg':
       case 'png':
@@ -240,10 +248,10 @@ export const useFileViewer = (props: IUseFileViewer) => {
                   </ScrollArea>
                 </div>
               }
-              <div className={cn('w-full h-full relative', {
+              <div ref={container} className={cn('w-full h-full relative', {
                 'w-[calc(100%-145px)]': Array.isArray(fileUrl)
               })}>
-                {renderFile()}
+                {container?.current ? renderFile(container.current['scrollWidth']) : null}
               </div>
 
             </div>

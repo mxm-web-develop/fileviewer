@@ -6,6 +6,22 @@
 yarn add @mxmweb/fv
 ```
 
+```ts
+import { useFileViewer, registerPDFWorker } from './application/lib_enter';
+registerPDFWorker('/worker/pdf.worker.min.js');
+function Preview() {
+
+   const { Element } = useFileViewer({
+    fileUrl:['https://demo.1.html'],
+    form:'html'
+  })
+...
+```
+
+#### Worker 文件下载地址
+
+https://github.com/mxm-web-develop/fileviewer/tree/master/public/worker
+
 ## 更新说明
 
 v.1.1.2
