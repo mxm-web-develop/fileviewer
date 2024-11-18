@@ -24,7 +24,7 @@ export const useStateStore = create<State>((set) => ({
   setAppState: (state) =>
     set(
       produce((draft: State) => {
-        Object.assign(draft.appState, state(draft.appState));
+        draft.appState = { ...draft.appState, ...state(draft.appState) };
       })
     ),
   setAppStatus: (status: AppStatus) =>

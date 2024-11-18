@@ -1,36 +1,60 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { AppStatus } from '../store/system.type';
 import { useStateStore } from '../store';
+import { uid } from 'uid';
 
 export const HtmlDisplay = ({ width }: any) => {
 
   const { appState, setAppStatus } = useStateStore();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-  useEffect(() => {
+  const id = useRef(uid(8)); // 使用 useRef 来存储 id
+  const currentFileData = useMemo(() => appState.data.find(item => item.id === appState.current_file), [appState.data, appState.current_file]);
 
-    const currentFileData = appState.data.find(item => item.id === appState.current_file);
-    const blob = currentFileData ? currentFileData.checha_data : null;
-    if (blob) {
+  useEffect(() => {
+    console.log(id.current); // 注意这里是 id.current
+    if (appState.status === AppStatus.FETCHED) {
+      const blob = currentFileData ? currentFileData.checha_data : null;
       const reader = new FileReader();
+      reader.readAsText(blob);
       reader.onload = () => {
+        if (appState.status !== AppStatus.PRASING) {
+          setAppStatus(AppStatus.PRASING);
+        }
         const content = reader.result as string;
         setHtmlContent(content);
-        setAppStatus(AppStatus.LOADED);
       };
-      reader.readAsText(blob); // 将 Blob 读取为文本
+      reader.onloadend = () => {
+        if (appState.status !== AppStatus.LOADED) {
+          setAppStatus(AppStatus.LOADED);
+        }
+      };
+      reader.onerror = (err) => {
+        console.log(err);
+      }
     }
-  }, [appState.data, appState.current_file]);
+  }, [appState.status]);
+
 
   return (
     <div className="h-full w-full flex justify-center  mx-auto relative overflow-hidden">
       {htmlContent && (
-        <iframe
+        <div
+          key={id.current}
           className="h-full mx-auto"
-          width={width}
-          style={{ border: 'none', width: width }}
-          srcDoc={htmlContent}
+          style={{ border: 'none', width: '100%' }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       )}
+
+      {/* {htmlContent && (
+        <iframe
+          key={id.current}
+          className="h-full mx-auto"
+          // width={width}
+          style={{ border: 'none', width: '100%' }}
+          srcDoc={htmlContent}
+        />
+      )} */}
     </div>
   );
 };

@@ -11,8 +11,6 @@ import Layout from './views/Layout';
 import { Blockquote, ScrollArea } from '@radix-ui/themes';
 import { AppStatus, ParsedFileItem } from './store/system.type';
 import { useStateStore } from './store';
-//import PDFDisplay from "./views/PdfDisplay";
-import { produce } from 'immer';
 import { HtmlDisplay } from './views/HtmlDisplay';
 import { registerAllModules } from 'handsontable/registry';
 import { IUseFileViewer } from './types/system';
@@ -41,8 +39,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
     throw new Error("多文件格式必须使用form传参指定解析格式.");
   }
   const { appState, setAppState } = useStateStore();
-
-  const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
+  // const netController = useStateStore(state => state.currentRequestAbortController)
+  // const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
   const container = useRef(null)
   const getStatus = (fileExtension: string) => {
     switch (fileExtension) {
@@ -56,12 +54,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   };
 
 
-  useEffect(() => {
-    if (container && container.current) {
-      console.dir(container.current)
-    }
 
-  }, [container])
   const dealUrl = (fileUrl: string) => {
     const urlParts = fileUrl.match(/\/([^\/?#]+)$/);
     const fileNameWithExtension = urlParts ? urlParts[1] : '';
@@ -72,13 +65,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
   };
 
   const fetchFile = async (fileUrls: any[]) => {
-    const abortController = new AbortController();
-    setNetController(abortController);
     try {
       const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
       const responses = await Promise.all(fetchPromises);
-
-
       // Check if any response has status other than 200
       responses.forEach((response, index) => {
         if (!response.ok) {
@@ -200,8 +189,12 @@ export const useFileViewer = (props: IUseFileViewer) => {
   };
 
   useEffect(() => {
+
     init(fileUrl);
-  }, []);
+
+
+  }, [fileUrl]); // 添加 initialized 作为依赖项
+
 
 
   return {

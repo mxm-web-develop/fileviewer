@@ -33,7 +33,7 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     base: './',
-    publicDir: false,
+    //publicDir: false,
     plugins: [
       resolve(),
       commonjs(),
@@ -114,7 +114,7 @@ export default ({ mode }: { mode: string }) => {
       port: 8888,
       proxy: {
         '/local': {
-          target: 'http://192.168.2.8:8888',
+          target: 'http://172.17.163.107:8888',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/local/, ''),
         },
