@@ -22,11 +22,12 @@ export const HtmlDisplay = ({ width }: any) => {
   }, [appState.data, appState.current_file]);
 
   return (
-    <div className="h-full w-full  mx-auto relative overflow-y-auto">
+    <div className="h-full w-full flex justify-center  mx-auto relative overflow-hidden">
       {htmlContent && (
         <iframe
-          className="h-full w-full mx-auto"
-          style={{ border: 'none' }}
+          className="h-full mx-auto"
+          width={width}
+          style={{ border: 'none', width: width }}
           srcDoc={htmlContent}
         />
       )}

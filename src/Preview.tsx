@@ -30,8 +30,8 @@ function Preview() {
     //   'http://10.64.7.145:9000/dev-brain-data/demoLib/测试预览PPTslides_20.html'],
     // form: 'html',
 
-    // fileUrl: ['/files/1.html', 'files/aaa.html'], form: 'html',
-    fileUrl: '/apefsamples/pdf.pdf', render_width: 540,
+    fileUrl: ['/files/1.html', 'files/2.html'], form: 'html',
+    // fileUrl: '/apefsamples/pdf.pdf', render_width: 540,
 
     // fileUrl: '/local/files/1.pdf',
     // fileUrl: [
@@ -74,7 +74,7 @@ function Preview() {
     actionOnEmmit: handlethat,
   });
 
-  return <div className="w-[700px] h-[100dvh] relative mx-auto">{Element}</div>;
+  return <div className="w-[980px] h-[800px] relative mx-auto">{Element}</div>;
 }
 
 export default Preview;
