@@ -18,6 +18,10 @@ function Preview() {
 ...
 ```
 
+#### Worker 文件下载地址
+
+https://github.com/mxm-web-develop/fileviewer/tree/master/public/worker
+
 ## 更新说明
 
 v1.0.28 支持图片，解决 xlsx 合并单元格 bug
