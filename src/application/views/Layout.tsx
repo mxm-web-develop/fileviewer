@@ -36,6 +36,7 @@ interface ILayout {
 }
 const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
   const { appState } = useStateStore();
+  const netController = useStateStore(state => state.currentRequestAbortController)
   const d = appState.data[appState.page_manager.current - 1];
   const { currentIcon, currentHeading } = useMemo(() => {
     const icon = typeIcons[appState.parse_form] || TxtIcon;
@@ -44,6 +45,12 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent }: ILayout) => {
   }, [appState.data, appState.page_manager]);
 
   const userHandler = (type: string) => {
+    console.log('file_display', type)
+    switch (type) {
+      case 'close':
+        netController?.abort()
+        break
+    }
     handleEmmit && handleEmmit(type);
   };
   return (

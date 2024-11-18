@@ -34,7 +34,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
     render_scale,
     LoadingComponent,
     fetching_text,
-    rending_text,
+    actionOnEmmit,
     error_text
   } = props;
   if (Array.isArray(fileUrl) && !form) {
@@ -42,6 +42,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   }
   const { appState, setAppState } = useStateStore();
 
+  const setNetController = useStateStore(state => state.setCurrentRequestAbortController)
   const getStatus = (fileExtension: string) => {
     switch (fileExtension) {
       case 'jpeg':
@@ -63,6 +64,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
   };
 
   const fetchFile = async (fileUrls: any[]) => {
+    const abortController = new AbortController();
+    setNetController(abortController);
     try {
       const fetchPromises = fileUrls.map((item) => fetch(item.file_url, { cache: 'no-store' }))
       const responses = await Promise.all(fetchPromises);
@@ -192,22 +195,13 @@ export const useFileViewer = (props: IUseFileViewer) => {
     init(fileUrl);
   }, []);
 
-  const handleEvent = (type: string) => {
-    switch (type) {
-      case 'plus':
-        break;
-      case 'minus':
-        break;
-    }
-  };
 
   return {
     Element: (
       // <Theme asChild {...theme}>
       <div className="relative h-full w-full overflow-hidden">
         <Layout
-          handleEmmit={props.actionOnEmmit && props.actionOnEmmit}
-          handleEvent={handleEvent}
+          handleEmmit={actionOnEmmit && actionOnEmmit}
         >
           <div className={cn("w-full h-full flex justify-center bg-[#f3f4f5]", {
             'w-600px': Array.isArray(fileUrl)

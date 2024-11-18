@@ -10,5 +10,5 @@ export interface IUseFileViewer {
   fetching_text?: string;
   rending_text?: string;
   error_text?: string;
-  actionOnEmmit?: (type: string) => any;
+  actionOnEmmit?: (type: string, data?: any) => any;
 }
