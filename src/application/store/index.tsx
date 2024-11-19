@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { AppStatev1029, AppStatus } from './system.type';
-import { enableMapSet } from 'immer';
+import { enableMapSet, setAutoFreeze } from 'immer';
 import { produce } from 'immer';
+import { createJSONStorage, persist } from 'zustand/middleware';
 enableMapSet();
 interface State {
   appState: AppStatev1029;
@@ -15,49 +16,77 @@ interface State {
   // 添加一个新的方法来取消所有请求
   abortAllRequests: () => void;
 }
-export const useStateStore = create<State>((set) => ({
-  appState: {
-    parse_form: 'txt',
-    file_url: '',
-    display_file_type: 'txt',
-    status: AppStatus.UNLOAD,
-    data: [],
-    page_manager: {
-      total: 0,
-      current: 0,
-    },
-  },
-  currentRequestAbortControllers: new Map(),
-  setAppState: (state) =>
-    set(
-      produce((draft: State) => {
-        draft.appState = { ...draft.appState, ...state(draft.appState) };
-      })
-    ),
-  setAppStatus: (status: AppStatus) =>
-    set(
-      produce((draft: State) => {
-        // 指定 draft 的类型
-        draft.appState.status = status;
-      })
-    ),
-  setCurrentRequestAbortController: (id, controller) =>
-    set(
-      produce((draft: State) => {
+export const useStateStore = create(
+  persist(
+    (set, get: any) => ({
+      appState: {
+        parse_form: 'txt',
+        file_url: '',
+        display_file_type: 'txt',
+        status: AppStatus.UNLOAD,
+        data: [],
+        page_manager: {
+          total: 0,
+          current: 0,
+        },
+      },
+      currentRequestAbortControllers: new Map(),
+      // setAppState: (state: (arg0: AppStatev1029) => AppStatev1029) =>
+      //   set(
+      //     produce((draft: State) => {
+      //       draft.appState = { ...draft.appState, ...state(draft.appState) };
+      //     })
+      //   ),
+      setAppState: (payload: any) => set({ appState: { ...get().appState, ...payload } }),
+      // setAppStatus: (status: AppStatus) =>
+      //   set(
+      //     produce((draft: State) => {
+      //       // 指定 draft 的类型
+      //       draft.appState.status = status;
+      //     })
+      //   ),
+      setAppStatus: (payload: any) => set({ appState: { ...get().appState, status: payload } }),
+      // setCurrentRequestAbortController: (id: string, controller: AbortController) =>
+      //   set(
+      //     produce((draft: State) => {
+      //       if (controller) {
+      //         draft.currentRequestAbortControllers.set(id, controller);
+      //       } else {
+      //         draft.currentRequestAbortControllers.delete(id);
+      //       }
+      //     })
+      //   ),
+      setCurrentRequestAbortController: (id: string, controller: AbortController) => {
+        const c = get().currentRequestAbortControllers;
         if (controller) {
-          draft.currentRequestAbortControllers.set(id, controller);
+          c.set(id, controller);
+          return set({ currentRequestAbortControllers: c });
         } else {
-          draft.currentRequestAbortControllers.delete(id);
+          c.delete(id, controller);
+          return set({ currentRequestAbortControllers: c });
         }
-      })
-    ),
-  abortAllRequests: () =>
-    set(
-      produce((draft: State) => {
-        draft.currentRequestAbortControllers.forEach((controller) => {
+      },
+      // abortAllRequests: () =>
+      //   set(
+      //     produce((draft: State) => {
+      //       draft.currentRequestAbortControllers.forEach((controller) => {
+      //         controller.abort();
+      //       });
+      //       draft.currentRequestAbortControllers.clear();
+      //     })
+      //   ),
+      abortAllRequests: (payload: any) => {
+        const c = get().currentRequestAbortControllers;
+        c.forEach((controller: { abort: () => void }) => {
           controller.abort();
         });
-        draft.currentRequestAbortControllers.clear();
-      })
-    ),
-}));
+        c.clear();
+        return set({ currentRequestAbortControllers: c });
+      },
+    }),
+    {
+      name: 'food-storage', // name of the item in the storage (must be unique)
+      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+    }
+  )
+);
