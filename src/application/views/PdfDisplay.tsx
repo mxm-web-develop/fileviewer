@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
@@ -13,6 +13,7 @@ import { ScrollArea } from '@radix-ui/themes';
 //   '/worker/pdf.worker.min.js',
 //   import.meta.url
 // ).toString();
+let timerPolling: any = null;
 export function registerPDFWorker(workerUrl: string) {
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 }
@@ -28,6 +29,7 @@ interface IPDFDisplayer {
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { annotation } = props;
   const { appState, setAppStatus } = useStateStore();
+  const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const pageChange = (page: number) => {
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
@@ -39,8 +41,13 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     );
   };
 
+  const getTotal = () => {
+    return appState.page_manager.total;
+  };
+
   useImperativeHandle(ref, () => ({
     pageChange,
+    getTotal,
   }));
   const updatePageManager = (numPages: number) => {
     useStateStore.setState((prevState) =>
@@ -52,9 +59,6 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
       })
     );
   };
-  useEffect(() => {
-    console.log(props.width);
-  }, [props.width]);
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
@@ -81,6 +85,45 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     }
   }, [appState.data, appState.current_file]);
 
+  const drawMark = () => {
+    const selfCanvas: any = document.getElementById('selfCanvas');
+    const ctx = selfCanvas.getContext('2d');
+    setTimeout(() => {
+      (annotation?.data || []).forEach((item) => {
+        ctx.fillStyle = 'rgba(223,231,255,.5)';
+        ctx.rect(205, 375, 85, 25);
+        ctx.fill();
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (
+      annotation?.method === 'position' &&
+      annotation?.data?.length &&
+      canvasSize.w &&
+      canvasSize.h
+    ) {
+      drawMark();
+    }
+  }, [canvasSize]);
+
+  const startPolling = () => {
+    timerPolling = setInterval(() => {
+      const canvas: any = document.getElementsByClassName('react-pdf__Page__canvas')[0];
+      if (canvas) {
+        setCanvasSize({ w: canvas.clientWidth, h: canvas.clientHeight });
+        clearInterval(timerPolling);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (annotation?.method === 'position' && annotation?.data?.length) {
+      startPolling();
+    }
+  }, []);
+
   return (
     <div className="h-full">
       <ScrollArea
@@ -92,12 +135,18 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         <div className="w-full mx-auto">
           <Document
             file={checha_data}
-            className="pdf-document my-5 px-8"
+            className="pdf-document my-5 mx-8 relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >
+            <canvas
+              id="selfCanvas"
+              width={canvasSize.w}
+              height={canvasSize.h}
+              className="absolute top-0 left-0 z-10"
+            />
             <div className="flex flex-col gap-y-3">
-              {annotation?.method === 'index' ? (
+              {annotation?.method === 'position' ? (
                 <Page
                   pageNumber={appState.page_manager.current}
                   width={props.width}
