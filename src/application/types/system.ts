@@ -11,4 +11,10 @@ export interface IUseFileViewer {
   rending_text?: string;
   error_text?: string;
   actionOnEmmit?: (type: string, data?: any) => any;
+  annotation?: {
+    method: 'match' | 'position' | 'index';
+    data?: [[number, number]];
+  };
+  hide_toolbar?: boolean;
+  bgColor?: string;
 }

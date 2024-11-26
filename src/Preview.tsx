@@ -1,19 +1,27 @@
 import { useFileViewer, registerPDFWorker } from './application/lib_enter';
-registerPDFWorker('/local/worker/pdf.worker.min.js');
+registerPDFWorker('/worker/pdf.worker.min.js');
 
 function Preview() {
   // 修正路径
-
-  // const handlethat = (type: string) => {
-  //   console.log(type);
-  // };
-  const { Element } = useFileViewer({
-    fileUrl: [
-      'http://10.15.12.11:9000/dev-rag-data/11%E6%9C%8819%E5%8F%B7%E6%BC%94%E7%A4%BA%E5%9B%9E%E5%BD%92/11%E6%9C%8819%E5%8F%B7%E6%BC%94%E7%A4%BA%E5%9B%9E%E5%BD%92_%E5%9B%BD%E5%AE%B6%E9%87%91%E8%9E%8D%E7%9B%91%E7%9D%A3%E7%AE%A1%E7%90%86%E6%80%BB%E5%B1%80%E6%9C%89%E5%85%B3%E5%8F%B8%E5%B1%80%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E5%9B%BA%E5%AE%9A%E8%B5%84%E4%BA%A7%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E6%B5%81%E5%8A%A8%E8%B5%84%E9%87%91%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E4%B8%AA%E4%BA%BA%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E7%AD%94%E8%AE%B0%E8%80%85%E9%97%AE/V0/parsed/%E5%9B%BD%E5%AE%B6%E9%87%91%E8%9E%8D%E7%9B%91%E7%9D%A3%E7%AE%A1%E7%90%86%E6%80%BB%E5%B1%80%E6%9C%89%E5%85%B3%E5%8F%B8%E5%B1%80%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E3%80%8A%E5%9B%BA%E5%AE%9A%E8%B5%84%E4%BA%A7%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E3%80%8A%E6%B5%81%E5%8A%A8%E8%B5%84%E9%87%91%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E3%80%8A%E4%B8%AA%E4%BA%BA%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E7%AD%94%E8%AE%B0%E8%80%85%E9%97%AE.docx.txt',
-      'http://10.15.12.11:9000/dev-rag-data/11%E6%9C%8819%E5%8F%B7%E6%BC%94%E7%A4%BA%E5%9B%9E%E5%BD%92/11%E6%9C%8819%E5%8F%B7%E6%BC%94%E7%A4%BA%E5%9B%9E%E5%BD%92_%E5%9B%BD%E5%AE%B6%E9%87%91%E8%9E%8D%E7%9B%91%E7%9D%A3%E7%AE%A1%E7%90%86%E6%80%BB%E5%B1%80%E6%9C%89%E5%85%B3%E5%8F%B8%E5%B1%80%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E5%9B%BA%E5%AE%9A%E8%B5%84%E4%BA%A7%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E6%B5%81%E5%8A%A8%E8%B5%84%E9%87%91%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E4%B8%AA%E4%BA%BA%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E7%AD%94%E8%AE%B0%E8%80%85%E9%97%AE/V0/parsed/%E5%9B%BD%E5%AE%B6%E9%87%91%E8%9E%8D%E7%9B%91%E7%9D%A3%E7%AE%A1%E7%90%86%E6%80%BB%E5%B1%80%E6%9C%89%E5%85%B3%E5%8F%B8%E5%B1%80%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E3%80%8A%E5%9B%BA%E5%AE%9A%E8%B5%84%E4%BA%A7%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E3%80%8A%E6%B5%81%E5%8A%A8%E8%B5%84%E9%87%91%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E3%80%8A%E4%B8%AA%E4%BA%BA%E8%B4%B7%E6%AC%BE%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95%E3%80%8B%E7%AD%94%E8%AE%B0%E8%80%85%E9%97%AE.docx.txt',
-    ],
-    form: 'txt',
-    // actionOnEmmit: handlethat,
+  const handlethat = (type: string) => {
+    console.log(type);
+    switch (type) {
+      case 'pdf_prePage':
+        break;
+      case 'pdf_downPage':
+        break;
+    }
+  };
+  const { Element, pdfRef } = useFileViewer({
+    fileUrl:
+      'http://10.15.12.13:9000/dev-rag-data/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95_%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%8F%8D%E6%B4%97%E9%92%B1%E6%B3%95/V0/%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%8F%8D%E6%B4%97%E9%92%B1%E6%B3%95.pdf',
+    form: 'pdf',
+    annotation: {
+      method: 'index',
+    },
+    hide_toolbar: true,
+    actionOnEmmit: handlethat,
+    //bgColor: 'transparent',
   });
 
   return <div className="w-[980px] h-[800px] relative mx-auto">{Element}</div>;
