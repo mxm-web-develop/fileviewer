@@ -146,22 +146,23 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
               className="absolute top-0 left-0 z-10"
             />
             <div className="flex flex-col gap-y-3">
-              {annotation?.method === 'position' ? (
+              {Array.from(new Array(appState.page_manager?.total), (el, index) => (
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={appState.page_manager.current}
+                  width={props.width}
+                  scale={props.scale}
+                />
+              ))}
+              {/* {annotation?.method === 'position' ? (
                 <Page
                   pageNumber={appState.page_manager.current}
                   width={props.width}
                   scale={props.scale}
                 />
               ) : (
-                Array.from(new Array(appState.page_manager?.total), (el, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                    width={props.width}
-                    scale={props.scale}
-                  />
-                ))
-              )}
+                
+              )} */}
             </div>
           </Document>
         </div>
