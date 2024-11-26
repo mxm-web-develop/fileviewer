@@ -13,7 +13,14 @@ export interface IUseFileViewer {
   actionOnEmmit?: (type: string, data?: any) => any;
   annotation?: {
     method: 'match' | 'position' | 'index';
-    data?: [[number, number]];
+    data?: [
+      {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+      }
+    ];
   };
   hide_toolbar?: boolean;
   bgColor?: string;
