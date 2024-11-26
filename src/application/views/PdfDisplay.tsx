@@ -99,7 +99,10 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const drawMark = () => {
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
+    ctx.clearRect(0, 0, canvasSize.w, canvasSize.h);
+    if (!annotation?.data?.length) return;
     (annotation?.data || []).forEach((item: any) => {
+      ctx.beginPath();
       ctx.fillStyle = 'rgba(223,231,255,.5)';
       ctx.rect(item.x, item.y, item.w, item.h);
       ctx.fill();
@@ -107,15 +110,10 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   };
 
   useEffect(() => {
-    if (
-      annotation?.method === 'position' &&
-      annotation?.data?.length &&
-      canvasSize.w &&
-      canvasSize.h
-    ) {
+    if (annotation?.method === 'position' && canvasSize.w && canvasSize.h) {
       drawMark();
     }
-  }, [canvasSize]);
+  }, [canvasSize, annotation?.data]);
 
   const startPolling = () => {
     timerPolling = setInterval(() => {
@@ -128,7 +126,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   };
 
   useEffect(() => {
-    if (annotation?.method === 'position' && annotation?.data?.length) {
+    if (annotation?.method === 'position') {
       startPolling();
     }
   }, []);
