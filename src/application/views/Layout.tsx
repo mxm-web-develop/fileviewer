@@ -86,7 +86,7 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent, hide_toolbar }: I
           </div>
         )}
 
-        <div className=" relative" style={{ height: `calc(100% - 40px)` }}>
+        <div className=" relative" style={{ height: `calc(100% - 0px)` }}>
           <div
             className={cn(' h-full w-full relative', {
               'justify-center items-center': !Array.isArray(appState.data),

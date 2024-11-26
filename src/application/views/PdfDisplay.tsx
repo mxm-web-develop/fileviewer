@@ -22,7 +22,14 @@ interface IPDFDisplayer {
   scale?: number;
   annotation?: {
     method: 'match' | 'position' | 'index';
-    data?: [[number, number]];
+    data?: [
+      {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+      }
+    ];
   };
 }
 
@@ -31,6 +38,10 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { appState, setAppStatus } = useStateStore();
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const pageChange = (page: number) => {
+    // 使用 querySelector 获取第一个匹配的元素
+    const element = document.querySelector(`[data-page-number="${page}"]`);
+    if (!element) return;
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
         draft.appState.page_manager = {
@@ -88,13 +99,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const drawMark = () => {
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
-    setTimeout(() => {
-      (annotation?.data || []).forEach((item) => {
-        ctx.fillStyle = 'rgba(223,231,255,.5)';
-        ctx.rect(205, 375, 85, 25);
-        ctx.fill();
-      });
-    }, 1000);
+    (annotation?.data || []).forEach((item: any) => {
+      ctx.fillStyle = 'rgba(223,231,255,.5)';
+      ctx.rect(item.x, item.y, item.w, item.h);
+      ctx.fill();
+    });
   };
 
   useEffect(() => {
@@ -149,7 +158,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
               {Array.from(new Array(appState.page_manager?.total), (el, index) => (
                 <Page
                   key={`page_${index + 1}`}
-                  pageNumber={appState.page_manager.current}
+                  pageNumber={index + 1}
                   width={props.width}
                   scale={props.scale}
                 />
