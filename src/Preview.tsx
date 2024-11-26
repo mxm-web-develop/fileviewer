@@ -20,15 +20,15 @@ function Preview() {
   });
 
   return (
-    <div className="w-[980px] h-[800px] relative mx-auto">
+    <div className="w-[1250px] h-[800px] relative mx-auto">
       {Element}
-      {/* <button
+      <button
         onClick={() => {
-          //pdfRef.current?.pageChange(3);
+          pdfRef.current?.pageChange(1);
           setCurPositions([
             {
-              x: 100,
-              y: 100,
+              x: 329,
+              y: 176,
               w: 532,
               h: 55,
             },
@@ -54,18 +54,18 @@ function Preview() {
       </button>
       <button
         onClick={() => {
-          //pdfRef.current?.pageChange(3);
+          pdfRef.current?.pageChange(6);
           setCurPositions([
             {
-              x: 200,
-              y: 300,
-              w: 532,
-              h: 55,
+              x: 170,
+              y: 158,
+              w: 698,
+              h: 952,
             },
           ]);
         }}
       >
-        翻页3
+        翻页6
       </button>
       <button
         onClick={() => {
@@ -74,7 +74,7 @@ function Preview() {
         }}
       >
         清除
-      </button> */}
+      </button>
     </div>
   );
 }
