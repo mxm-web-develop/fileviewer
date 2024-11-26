@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
@@ -19,10 +19,29 @@ export function registerPDFWorker(workerUrl: string) {
 interface IPDFDisplayer {
   width?: number;
   scale?: number;
+  annotation?: {
+    method: 'match' | 'position' | 'index';
+    data?: [[number, number]];
+  };
 }
 
-const PDFDisplay = (props: IPDFDisplayer) => {
+const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
+  const { annotation } = props;
   const { appState, setAppStatus } = useStateStore();
+  const pageChange = (page: number) => {
+    useStateStore.setState((prevState) =>
+      produce(prevState, (draft) => {
+        draft.appState.page_manager = {
+          ...draft.appState.page_manager,
+          current: page,
+        }; // 确保 page_manager 存在并更新 total
+      })
+    );
+  };
+
+  useImperativeHandle(ref, () => ({
+    pageChange,
+  }));
   const updatePageManager = (numPages: number) => {
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
@@ -34,8 +53,8 @@ const PDFDisplay = (props: IPDFDisplayer) => {
     );
   };
   useEffect(() => {
-    console.log(props.width)
-  }, [props.width])
+    console.log(props.width);
+  }, [props.width]);
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
@@ -63,28 +82,43 @@ const PDFDisplay = (props: IPDFDisplayer) => {
   }, [appState.data, appState.current_file]);
 
   return (
-    <ScrollArea type="scroll" scrollbars="vertical" size={'2'} style={{ height: '100%', width: '100%' }}>
-      <div className='w-full mx-auto' >
-        <Document
-          file={checha_data}
-          className="pdf-document my-5 px-8"
-          onLoadSuccess={onDocumentLoadSuccess}
-          onLoadError={onDocumentLoadError}
-        >
-          <div className="flex flex-col gap-y-3">
-            {Array.from(new Array(appState.page_manager?.total), (el, index) => (
-              <Page
-                key={`page_${index + 1}`}
-                pageNumber={index + 1}
-                width={props.width}
-                scale={props.scale}
-              />
-            ))}
-          </div>
-        </Document>
-      </div>
-    </ScrollArea>
+    <div className="h-full">
+      <ScrollArea
+        type="scroll"
+        scrollbars="vertical"
+        size={'2'}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <div className="w-full mx-auto">
+          <Document
+            file={checha_data}
+            className="pdf-document my-5 px-8"
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+          >
+            <div className="flex flex-col gap-y-3">
+              {annotation?.method === 'index' ? (
+                <Page
+                  pageNumber={appState.page_manager.current}
+                  width={props.width}
+                  scale={props.scale}
+                />
+              ) : (
+                Array.from(new Array(appState.page_manager?.total), (el, index) => (
+                  <Page
+                    key={`page_${index + 1}`}
+                    pageNumber={index + 1}
+                    width={props.width}
+                    scale={props.scale}
+                  />
+                ))
+              )}
+            </div>
+          </Document>
+        </div>
+      </ScrollArea>
+    </div>
   );
-};
+});
 
 export default PDFDisplay;
