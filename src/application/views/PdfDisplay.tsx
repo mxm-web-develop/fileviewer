@@ -142,7 +142,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         <div className="w-full mx-auto">
           <Document
             file={checha_data}
-            className="pdf-document my-5 mx-8 relative h-full"
+            className="pdf-document my-[20px] mx-[20px] relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >

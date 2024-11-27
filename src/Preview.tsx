@@ -17,21 +17,23 @@ function Preview() {
       method: 'position',
       data: curPositions,
     },
+    // render_width: 1250,
+    // render_scale: 0.53,
     hide_toolbar: true,
   });
 
   return (
-    <div className="w-[1250px] h-[800px] relative mx-auto">
+    <div className="w-[700px] h-[800px] relative mx-auto">
       {Element}
       <button
         onClick={() => {
           pdfRef.current?.pageChange(1);
           setCurPositions([
             {
-              x: 329,
-              y: 176,
-              w: 532,
-              h: 55,
+              x: 329 * 0.528,
+              y: 176 * 0.528,
+              w: 532 * 0.528,
+              h: 55 * 0.528,
             },
           ]);
         }}
@@ -40,13 +42,13 @@ function Preview() {
       </button>
       <button
         onClick={() => {
-          pdfRef.current?.pageChange(3);
+          pdfRef.current?.pageChange(2);
           setCurPositions([
             {
-              x: 200,
-              y: 200,
-              w: 532,
-              h: 55,
+              x: 169 * 0.53,
+              y: 232 * 0.53,
+              w: 770 * 0.53,
+              h: 876 * 0.53,
             },
           ]);
         }}
@@ -58,10 +60,10 @@ function Preview() {
           pdfRef.current?.pageChange(6);
           setCurPositions([
             {
-              x: 170,
-              y: 158,
-              w: 698,
-              h: 952,
+              x: 170 * 0.52,
+              y: 158 * 0.52,
+              w: 698 * 0.52,
+              h: 952 * 0.52,
               bgColor: 'rgba(225,238,223,.5)',
             },
           ]);
