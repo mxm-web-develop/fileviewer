@@ -23,6 +23,17 @@ const typeIcons: { [key: string]: string } = {
   doc: WordIcon,
 };
 interface ILayout {
+  annotation?: {
+    method: 'match' | 'position' | 'index';
+    data?: [
+      {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+      }
+    ];
+  };
   hide_toolbar?: boolean;
   children?: ReactNode;
   pageBar?: ReactNode;
@@ -35,7 +46,7 @@ interface ILayout {
     rending_text?: string;
   };
 }
-const Layout = ({ children, handleEmmit, pageBar, handleEvent, hide_toolbar }: ILayout) => {
+const Layout = ({ children, handleEmmit, pageBar, annotation, hide_toolbar }: ILayout) => {
   const { appState } = useStateStore();
   const abortAllRequests = useStateStore((state) => state.abortAllRequests);
   const d = appState.data[appState.page_manager.current - 1];
@@ -86,7 +97,12 @@ const Layout = ({ children, handleEmmit, pageBar, handleEvent, hide_toolbar }: I
           </div>
         )}
 
-        <div className=" relative" style={{ height: `calc(100% - 0px)` }}>
+        <div
+          className=" relative"
+          style={{
+            height: annotation?.method === 'position' ? `calc(100% - 0px)` : `calc(100% - 40px)`,
+          }}
+        >
           <div
             className={cn(' h-full w-full relative', {
               'justify-center items-center': !Array.isArray(appState.data),

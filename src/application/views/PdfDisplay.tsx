@@ -39,9 +39,9 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const pageChange = (page: number) => {
     // 使用 querySelector 获取第一个匹配的元素
-    const element = document.querySelector(`[data-page-number="${page}"]`);
-    if (!element) return;
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // const element = document.querySelector(`[data-page-number="${page}"]`);
+    // if (!element) return;
+    // element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
         draft.appState.page_manager = {
@@ -103,7 +103,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     if (!annotation?.data?.length) return;
     (annotation?.data || []).forEach((item: any) => {
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(223,231,255,.5)';
+      ctx.fillStyle = item.bgColor || 'rgba(223,231,255,.7)';
       ctx.rect(item.x, item.y, item.w, item.h);
       ctx.fill();
     });
@@ -142,34 +142,33 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         <div className="w-full mx-auto">
           <Document
             file={checha_data}
-            className="pdf-document my-5 mx-8 relative h-full"
+            className="pdf-document my-[20px] mx-[20px] relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >
             <canvas
               id="selfCanvas"
-              width={canvasSize.w}
+              width={props.width || canvasSize.w}
               height={canvasSize.h}
               className="absolute top-0 left-0 z-10"
             />
             <div className="flex flex-col gap-y-3">
-              {Array.from(new Array(appState.page_manager?.total), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  width={props.width}
-                  scale={props.scale}
-                />
-              ))}
-              {/* {annotation?.method === 'position' ? (
+              {annotation?.method === 'position' ? (
                 <Page
                   pageNumber={appState.page_manager.current}
                   width={props.width}
                   scale={props.scale}
                 />
               ) : (
-                
-              )} */}
+                Array.from(new Array(appState.page_manager?.total), (el, index) => (
+                  <Page
+                    key={`page_${index + 1}`}
+                    pageNumber={index + 1}
+                    width={props.width}
+                    scale={props.scale}
+                  />
+                ))
+              )}
             </div>
           </Document>
         </div>

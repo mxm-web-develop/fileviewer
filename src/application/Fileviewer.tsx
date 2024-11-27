@@ -207,7 +207,11 @@ export const useFileViewer = (props: IUseFileViewer) => {
     Element: (
       // <Theme asChild {...theme}>
       <div className="relative h-full w-full overflow-hidden">
-        <Layout handleEmmit={actionOnEmmit && actionOnEmmit} hide_toolbar={hide_toolbar}>
+        <Layout
+          handleEmmit={actionOnEmmit && actionOnEmmit}
+          hide_toolbar={hide_toolbar}
+          annotation={annotation}
+        >
           <div
             className={cn('w-full h-full flex justify-center', {
               'w-600px': Array.isArray(fileUrl),
