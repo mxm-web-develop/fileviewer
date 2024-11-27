@@ -39,7 +39,7 @@ function Preview() {
       </button>
       <button
         onClick={() => {
-          //pdfRef.current?.pageChange(3);
+          pdfRef.current?.pageChange(3);
           setCurPositions([
             {
               x: 200,
@@ -61,6 +61,7 @@ function Preview() {
               y: 158,
               w: 698,
               h: 952,
+              bgColor: 'rgba(225,238,223,.5)',
             },
           ]);
         }}

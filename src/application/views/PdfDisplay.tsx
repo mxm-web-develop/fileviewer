@@ -103,7 +103,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     if (!annotation?.data?.length) return;
     (annotation?.data || []).forEach((item: any) => {
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(223,231,255,.7)';
+      ctx.fillStyle = item.bgColor || 'rgba(223,231,255,.7)';
       ctx.rect(item.x, item.y, item.w, item.h);
       ctx.fill();
     });
