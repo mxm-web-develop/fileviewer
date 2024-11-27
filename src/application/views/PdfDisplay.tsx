@@ -148,7 +148,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
           >
             <canvas
               id="selfCanvas"
-              width={canvasSize.w}
+              width={props.width || canvasSize.w}
               height={canvasSize.h}
               className="absolute top-0 left-0 z-10"
             />
