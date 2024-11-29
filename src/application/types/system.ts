@@ -1,5 +1,31 @@
 import { ReactNode } from 'react';
 
+export interface AnotationPosition {
+  id: string;
+  page: number;
+  position: [
+    [number, number],
+    [number, number],
+    [number, number],
+    [number, number]
+    // tl,tr,br,bl
+  ];
+}
+
+export type AnotationPositionList = AnotationPosition[];
+
+export type AnotationMethod = 'match' | 'position' | 'index';
+
+export type AnotationType = {
+  method: AnotationMethod;
+  data?: AnotationPositionList;
+  origin_paper_size?: {
+    width?: number;
+    height?: number;
+  };
+  anotation_color?: string;
+};
+
 export interface IUseFileViewer {
   fileUrl: string[] | string;
   form?: 'pdf' | 'doc' | 'docx' | 'txt' | 'md' | 'html' | 'csv' | 'xlsx' | 'img' | string;
@@ -10,18 +36,9 @@ export interface IUseFileViewer {
   fetching_text?: string;
   rending_text?: string;
   error_text?: string;
+  view_type?: 'scroll' | 'pagination';
   actionOnEmmit?: (type: string, data?: any) => any;
-  annotation?: {
-    method: 'match' | 'position' | 'index';
-    data?: [
-      {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-      }
-    ];
-  };
+  annotation?: AnotationType;
   hide_toolbar?: boolean;
-  bgColor?: string;
+  // bgColor?: string;
 }

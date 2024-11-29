@@ -1,12 +1,13 @@
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-
+import './style.css'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
+import { AnotationMethod, AnotationPosition, AnotationType } from '../types/system';
 // const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
 // import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -20,17 +21,7 @@ export function registerPDFWorker(workerUrl: string) {
 interface IPDFDisplayer {
   width?: number;
   scale?: number;
-  annotation?: {
-    method: 'match' | 'position' | 'index';
-    data?: [
-      {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-      }
-    ];
-  };
+  annotation?: AnotationType
 }
 
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
@@ -51,6 +42,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
       })
     );
   };
+
+
+
+
+
 
   const getTotal = () => {
     return appState.page_manager.total;
@@ -74,12 +70,24 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
 
-    // 检查并调整滚动位置
     const container = document.querySelector('.pdf-document');
     if (container) {
       container.scrollTop = 0; // 滚动到第一页的顶部
-      const pageHeight = container.scrollHeight / numPages;
-      container.scrollTop = pageHeight * 8; // 滚动到第9页的顶部
+    }
+
+    const canvas: any = document.getElementById('selfCanvas');
+    const page: any = document.querySelector(`[data-page-number="${appState.page_manager.current}"]`);
+
+    if (canvas && page) {
+      const { top, left } = page.getBoundingClientRect();
+      const parent = page.parentElement; // 获取父元素
+      const parentLeft = parent ? parent.getBoundingClientRect().left : 0; // 获取父元素的左边距
+      console.log((left - parentLeft).toFixed())
+      canvas.style.position = 'absolute';
+      canvas.style.top = `${top}px`;
+      canvas.style.left = `${left}px`; // 调整canvas的left值
+      canvas.width = page.scrollWidth; // 设置canvas宽度
+      canvas.height = page.scrollHeight; // 设置canvas高度
     }
   };
   const onDocumentLoadError = (error: any) => {
@@ -100,11 +108,22 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
     ctx.clearRect(0, 0, canvasSize.w, canvasSize.h);
+
     if (!annotation?.data?.length) return;
-    (annotation?.data || []).forEach((item: any) => {
+
+    (annotation.data || []).forEach((item: AnotationPosition) => {
       ctx.beginPath();
-      ctx.fillStyle = item.bgColor || 'rgba(223,231,255,.7)';
-      ctx.rect(item.x, item.y, item.w, item.h);
+      ctx.fillStyle = 'rgba(223,231,255,.7)';
+
+      // 使用四个位置绘制矩形
+      const [[tlX, tlY], [trX, trY], [brX, brY], [blX, blY]] = item.position;
+
+      // 绘制矩形
+      ctx.moveTo(tlX, tlY);
+      ctx.lineTo(trX, trY);
+      ctx.lineTo(brX, brY);
+      ctx.lineTo(blX, blY);
+      ctx.closePath();
       ctx.fill();
     });
   };
@@ -125,11 +144,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     });
   };
 
-  useEffect(() => {
-    if (annotation?.method === 'position') {
-      startPolling();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (annotation?.method === 'position') {
+  //     startPolling();
+  //   }
+  // }, []);
 
   return (
     <div className="h-full">
@@ -139,27 +158,21 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         size={'2'}
         style={{ height: '100%', width: '100%' }}
       >
-        <div className="w-full mx-auto">
+        <div className=" mx-auto">
           <Document
             file={checha_data}
-            className="pdf-document my-[20px] mx-[20px] relative h-full"
+            className="relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >
             <canvas
               id="selfCanvas"
-              width={canvasSize.w || props.width}
+              width={props.width}
               height={canvasSize.h || 1200}
               className="absolute top-0 left-0 z-10"
             />
-            <div className="flex flex-col gap-y-3">
-              {annotation?.method === 'position' ? (
-                <Page
-                  pageNumber={appState.page_manager.current}
-                  width={props.width}
-                  scale={props.scale}
-                />
-              ) : (
+            <div className="flex flex-col gap-y-[5px]">
+              {
                 Array.from(new Array(appState.page_manager?.total), (el, index) => (
                   <Page
                     key={`page_${index + 1}`}
@@ -168,7 +181,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
                     scale={props.scale}
                   />
                 ))
-              )}
+              }
             </div>
           </Document>
         </div>

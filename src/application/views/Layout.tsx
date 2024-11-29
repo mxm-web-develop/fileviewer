@@ -8,6 +8,7 @@ import WordIcon from '../assets/word.png';
 import PptIcon from '../assets/ppt.png';
 import { cn } from '@udecode/cn';
 import { X } from 'lucide-react';
+import { AnotationMethod, AnotationPositionList, AnotationType } from '../types/system';
 
 const typeIcons: { [key: string]: string } = {
   csv: TableIcon,
@@ -23,17 +24,7 @@ const typeIcons: { [key: string]: string } = {
   doc: WordIcon,
 };
 interface ILayout {
-  annotation?: {
-    method: 'match' | 'position' | 'index';
-    data?: [
-      {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-      }
-    ];
-  };
+  annotation?: AnotationType
   hide_toolbar?: boolean;
   children?: ReactNode;
   pageBar?: ReactNode;

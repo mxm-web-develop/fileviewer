@@ -94,6 +94,7 @@ interface AnotationPosition {
 }
 
 typeof AnotationPositionList = AnotationPosition[]
+
 ```
 
 ### 相关资源
