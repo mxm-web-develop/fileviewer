@@ -73,7 +73,27 @@ interface IUseFileViewer {
   rending_text: string;
   error_text: string;
   actionOnEmmit?: (type: string, data?: any) => any;
+  annotation?: {
+    method: 'position' | 'index';
+    data: AnotationPositionList;
+  };
 }
+```
+
+```ts
+interface AnotationPosition {
+  id:string
+  page: number;
+  position: [
+    number,
+    number,
+    number,
+    number
+    // tl,tr,br,bl
+  ];
+}
+
+typeof AnotationPositionList = AnotationPosition[]
 ```
 
 ### 相关资源
