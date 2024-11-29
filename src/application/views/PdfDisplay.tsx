@@ -15,6 +15,7 @@ import { AnotationMethod, AnotationPosition, AnotationType } from '../types/syst
 //   import.meta.url
 // ).toString();
 let timerPolling: any = null;
+const page_gap = 5
 export function registerPDFWorker(workerUrl: string) {
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 }
@@ -79,15 +80,18 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     const page: any = document.querySelector(`[data-page-number="${appState.page_manager.current}"]`);
 
     if (canvas && page) {
-      const { top, left } = page.getBoundingClientRect();
-      const parent = page.parentElement; // 获取父元素
-      const parentLeft = parent ? parent.getBoundingClientRect().left : 0; // 获取父元素的左边距
-      console.log((left - parentLeft).toFixed())
-      canvas.style.position = 'absolute';
-      canvas.style.top = `${top}px`;
-      canvas.style.left = `${left}px`; // 调整canvas的left值
-      canvas.width = page.scrollWidth; // 设置canvas宽度
-      canvas.height = page.scrollHeight; // 设置canvas高度
+      // 使用 requestAnimationFrame 确保在下一帧执行
+      setTimeout(() => {
+        const { top, left } = page.getBoundingClientRect();
+        const parent = page.parentElement; // 获取父元素
+        const parentLeft = parent ? parent.getBoundingClientRect().left : 0; // 获取父元素的左边距
+        canvas.style.position = 'absolute';
+        canvas.style.top = `${top}px`;
+        canvas.style.left = `${left - parentLeft}px`; // 调整canvas的left值
+        console.log(numPages)
+        canvas.width = page.scrollWidth; // 设置canvas宽度
+        canvas.height = page.scrollHeight * numPages + (numPages * page_gap); // 设置canvas高度 
+      }, 100); // 延迟100毫秒
     }
   };
   const onDocumentLoadError = (error: any) => {
@@ -171,7 +175,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
               height={canvasSize.h || 1200}
               className="absolute top-0 left-0 z-10"
             />
-            <div className="flex flex-col gap-y-[5px]">
+            <div
+              style={{
+                rowGap: page_gap
+              }}
+              className="flex flex-col ">
               {
                 Array.from(new Array(appState.page_manager?.total), (el, index) => (
                   <Page

@@ -3,13 +3,14 @@ import { ReactNode } from 'react';
 export interface AnotationPosition {
   id: string;
   page: number;
-  anotation_color?: string;
-  position: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  };
+  position: [
+    [number, number],
+    [number, number],
+    [number, number],
+    [number, number]
+    // tl,tr,br,bl
+  ];
+  annotation_color?: string;
 }
 
 export type AnotationPositionList = AnotationPosition[];
@@ -23,6 +24,7 @@ export type AnotationType = {
     width?: number;
     height?: number;
   };
+  anotation_color?: string;
 };
 
 export interface IUseFileViewer {
