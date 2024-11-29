@@ -1,28 +1,23 @@
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import './style.css'
+import './style.css';
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
 import { AnotationMethod, AnotationPosition, AnotationType } from '../types/system';
-// const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
-// import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   '/worker/pdf.worker.min.js',
-//   import.meta.url
-// ).toString();
+
 let timerPolling: any = null;
-const page_gap = 5
+const page_gap = 5;
 export function registerPDFWorker(workerUrl: string) {
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 }
 interface IPDFDisplayer {
   width?: number;
   scale?: number;
-  annotation?: AnotationType
+  annotation?: AnotationType;
 }
 
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
@@ -30,24 +25,15 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { appState, setAppStatus } = useStateStore();
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const pageChange = (page: number) => {
-    // 使用 querySelector 获取第一个匹配的元素
-    // const element = document.querySelector(`[data-page-number="${page}"]`);
-    // if (!element) return;
-    // element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
         draft.appState.page_manager = {
           ...draft.appState.page_manager,
           current: page,
-        }; // 确保 page_manager 存在并更新 total
+        };
       })
     );
   };
-
-
-
-
-
 
   const getTotal = () => {
     return appState.page_manager.total;
@@ -77,7 +63,9 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     }
 
     const canvas: any = document.getElementById('selfCanvas');
-    const page: any = document.querySelector(`[data-page-number="${appState.page_manager.current}"]`);
+    const page: any = document.querySelector(
+      `[data-page-number="${appState.page_manager.current}"]`
+    );
 
     if (canvas && page) {
       // 使用 requestAnimationFrame 确保在下一帧执行
@@ -88,9 +76,9 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         canvas.style.position = 'absolute';
         canvas.style.top = `${top}px`;
         canvas.style.left = `${left - parentLeft}px`; // 调整canvas的left值
-        console.log(numPages)
-        canvas.width = page.scrollWidth; // 设置canvas宽度
-        canvas.height = page.scrollHeight * numPages + (numPages * page_gap); // 设置canvas高度 
+        console.log(numPages);
+        // canvas.width = page.scrollWidth; // 设置canvas宽度
+        // canvas.height = page.scrollHeight; //* numPages + numPages * page_gap; // 设置canvas高度
       }, 100); // 延迟100毫秒
     }
   };
@@ -109,50 +97,45 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   }, [appState.data, appState.current_file]);
 
   const drawMark = () => {
+    const { data, origin_paper_size }: any = annotation;
+    const renderWidth = props.width as number;
+    const scale = +(renderWidth / origin_paper_size.width).toFixed(2);
+    const renderHeight = origin_paper_size.height * scale;
+    setCanvasSize({ w: renderWidth, h: renderHeight });
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
-    ctx.clearRect(0, 0, canvasSize.w, canvasSize.h);
-
-    if (!annotation?.data?.length) return;
-
-    (annotation.data || []).forEach((item: AnotationPosition) => {
+    ctx.clearRect(0, 0, renderWidth, renderHeight);
+    (data || []).forEach((item: any) => {
+      const { position, anotation_color } = item;
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(223,231,255,.7)';
-
+      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.7)';
       // 使用四个位置绘制矩形
-      const [[tlX, tlY], [trX, trY], [brX, brY], [blX, blY]] = item.position;
-
+      const [[tlX, tlY]] = position;
       // 绘制矩形
-      ctx.moveTo(tlX, tlY);
-      ctx.lineTo(trX, trY);
-      ctx.lineTo(brX, brY);
-      ctx.lineTo(blX, blY);
+      ctx.moveTo(tlX * scale, tlY * scale);
+      for (let i = 1; i < position.length; i++) {
+        ctx.lineTo(position[i][0] * scale, position[i][1] * scale);
+      }
       ctx.closePath();
       ctx.fill();
     });
   };
 
+  // const startPolling = () => {
+  //   timerPolling = setInterval(() => {
+  //     const canvas: any = document.getElementsByClassName('react-pdf__Page__canvas')[0];
+  //     if (canvas) {
+  //       setCanvasSize({ w: canvas.clientWidth, h: canvas.clientHeight });
+  //       clearInterval(timerPolling);
+  //     }
+  //   });
+  // };
+
   useEffect(() => {
-    if (annotation?.method === 'position' && canvasSize.w && canvasSize.h) {
+    if (annotation?.method === 'position' && annotation?.data?.length && props.width) {
       drawMark();
     }
-  }, [canvasSize, annotation?.data]);
-
-  const startPolling = () => {
-    timerPolling = setInterval(() => {
-      const canvas: any = document.getElementsByClassName('react-pdf__Page__canvas')[0];
-      if (canvas) {
-        setCanvasSize({ w: canvas.clientWidth, h: canvas.clientHeight });
-        clearInterval(timerPolling);
-      }
-    });
-  };
-
-  // useEffect(() => {
-  //   if (annotation?.method === 'position') {
-  //     startPolling();
-  //   }
-  // }, []);
+  }, [annotation?.data, props.width]);
 
   return (
     <div className="h-full">
@@ -162,7 +145,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         size={'2'}
         style={{ height: '100%', width: '100%' }}
       >
-        <div className=" mx-auto">
+        <div>
           <Document
             file={checha_data}
             className="relative h-full"
@@ -171,16 +154,18 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
           >
             <canvas
               id="selfCanvas"
-              width={props.width}
-              height={canvasSize.h || 1200}
+              width={canvasSize.w}
+              height={canvasSize.h}
               className="absolute top-0 left-0 z-10"
             />
-            <div
-              style={{
-                rowGap: page_gap
-              }}
-              className="flex flex-col ">
-              {
+            <div className="flex flex-col gap-y-[5px]">
+              {annotation?.method === 'position' ? (
+                <Page
+                  pageNumber={appState.page_manager.current}
+                  width={props.width}
+                  scale={props.scale}
+                />
+              ) : (
                 Array.from(new Array(appState.page_manager?.total), (el, index) => (
                   <Page
                     key={`page_${index + 1}`}
@@ -189,7 +174,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
                     scale={props.scale}
                   />
                 ))
-              }
+              )}
             </div>
           </Document>
         </div>

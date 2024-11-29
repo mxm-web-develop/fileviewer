@@ -3,14 +3,8 @@ import { ReactNode } from 'react';
 export interface AnotationPosition {
   id: string;
   page: number;
-  position: [
-    [number, number],
-    [number, number],
-    [number, number],
-    [number, number]
-    // tl,tr,br,bl
-  ];
-  annotation_color?: string;
+  anotation_color?: string;
+  position: [[number, number], [number, number], [number, number], [number, number]];
 }
 
 export type AnotationPositionList = AnotationPosition[];
