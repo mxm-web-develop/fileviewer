@@ -64,7 +64,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
     const fileName = fileNameWithExtension.split('.').slice(0, -1).join('.') || '';
     const fileExtension = fileNameWithExtension.split('.').pop() || '';
     const form = props.form || fileExtension;
-    return { fileName, parse_form: form };
+    return { fileName, parse_form: form.toLocaleLowerCase() };
   };
 
   const fetchFile = async (fileUrls: any[]) => {
