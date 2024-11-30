@@ -117,7 +117,27 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   }, [appState.data, appState.current_file]);
 
   const drawMark = () => {
-    const { data }: any = annotation;
+    const testData = [
+      {
+        position: [
+          [100, 100], // tl
+          [200, 100], // tr
+          [200, 200], // br
+          [100, 200]  // bl
+        ],
+        anotation_color: 'rgba(255, 0, 0, 0.5)' // 红色半透明
+      },
+      {
+        position: [
+          [250, 250], // tl
+          [350, 250], // tr
+          [350, 350], // br
+          [250, 350]  // bl
+        ],
+        anotation_color: 'rgba(0, 255, 0, 0.5)' // 绿色半透明
+      }
+    ];
+
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
 
@@ -127,11 +147,12 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
 
     ctx.clearRect(0, 0, renderWidth, renderHeight); // 清空画布
 
-    data.forEach((item: any) => {
+    testData.forEach((item: any) => {
       const { position, anotation_color } = item;
       ctx.beginPath();
-      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.8)';
-      // 使用四个位置绘制矩形
+      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.7)';
+
+      // 使用四个位置绘制多边形
       const [[tlX, tlY]] = position;
       ctx.moveTo(tlX, tlY); // 移动到第一个点
 
@@ -154,11 +175,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   //   });
   // };
 
-  useEffect(() => {
-    if (annotation?.method === 'position' && annotation?.data?.length && props.width) {
-      drawMark();
-    }
-  }, [annotation?.data, props.width]);
+  // useEffect(() => {
+  //   if (annotation?.method === 'position' && annotation?.data?.length && props.width) {
+  //     drawMark();
+  //   }
+  // }, [annotation?.data, props.width]);
 
   return (
     <div className="h-full">
@@ -168,14 +189,19 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         size={'2'}
         style={{ height: '100%', width: '100%' }}
       >
-        <div className="w-full mx-auto">
+        <div>
           <Document
             file={checha_data}
             className="relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >
-            <canvas id="selfCanvas" className="absolute top-0 left-0 z-10" />
+            <canvas
+              id="selfCanvas"
+              width={canvasSize.w}
+              height={canvasSize.h}
+              className="absolute top-0 left-0 z-10"
+            />
             <div className="flex flex-col gap-y-[5px]">
               {annotation?.method === 'position' ? (
                 <Page
