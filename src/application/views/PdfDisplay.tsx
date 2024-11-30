@@ -148,8 +148,8 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
           >
             <canvas
               id="selfCanvas"
-              width={canvasSize.w || props.width}
-              height={canvasSize.h || 1200}
+              width={props.width || canvasSize.w}
+              height={canvasSize.h}
               className="absolute top-0 left-0 z-10"
             />
             <div className="flex flex-col gap-y-3">
