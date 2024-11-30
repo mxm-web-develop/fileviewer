@@ -3,12 +3,19 @@ import { useStateStore } from '../store';
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { AppStatus } from '../store/system.type';
 import remarkGfm from 'remark-gfm';
-import './style.css';
 
 const MarkdownDisplay = forwardRef((props: any, ref: any) => {
   const { appState, setAppStatus } = useStateStore();
   const [text, setText] = useState('');
   const tableMd: any = useRef(null);
+
+  const clearHeightLight = () => {
+    const doms: any = document.getElementsByClassName('heightLight');
+    if (!doms?.length) return;
+    for (let i = 0; i < doms.length; i++) {
+      doms[i].style.backgroundColor = '';
+    }
+  };
 
   const heightLight = (data: { positions: any[]; bgColor?: string }) => {
     const { positions, bgColor } = data;
@@ -19,17 +26,23 @@ const MarkdownDisplay = forwardRef((props: any, ref: any) => {
       return item instanceof HTMLTableElement;
     });
     if (!curTable) return;
-    (positions || []).forEach((item: any) => {
+    clearHeightLight();
+    (positions || []).forEach((item: any, index: number) => {
       const [rowIndex, colIndex] = item;
       const row = curTable.rows[rowIndex + 1];
       if (row) {
         const cell = row.cells[colIndex];
         if (cell) {
+          if (index === 0) {
+            setTimeout(() => {
+              cell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+          }
+          cell.className = 'heightLight';
           cell.style.backgroundColor = bgColor || 'lightblue';
         }
       }
     });
-    console.log('tableMd', curTable);
   };
 
   useImperativeHandle(ref, () => ({
