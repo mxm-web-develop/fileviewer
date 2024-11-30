@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import './style.css';
 import '@radix-ui/themes/styles.css';
@@ -22,7 +22,7 @@ import Loading from './views/Loading';
 import ErrorComponent from './views/ErrorComponent';
 
 registerAllModules();
-const defaultAnnotationColor = 'rgba(0,0,0,.4)'
+
 export const useFileViewer = (props: IUseFileViewer) => {
   const {
     fileUrl,
@@ -36,9 +36,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
     error_text,
     hide_toolbar,
     annotation,
-    // bgColor = 'bg-slate-100',
+    bgColor = 'bg-slate-100',
   } = props;
-
   if (Array.isArray(fileUrl) && !form) {
     throw new Error('多文件格式必须使用form传参指定解析格式.');
   }
@@ -244,11 +243,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
                 </div>
               </div>
             )}
-            <div
-              style={{
-                background: props.annotation && props.annotation?.anotation_color ? props.annotation?.anotation_color : defaultAnnotationColor
-              }}
-              className={` h-full w-full flex items-center justify-center`}>
+            <div className={`${bgColor} h-full w-full flex items-center justify-center`}>
               {Array.isArray(fileUrl) && fileUrl.length > 1 && (
                 <div className="multiFile-nav w-[145px] h-full">
                   <ScrollArea style={{ height: '100%' }}>
