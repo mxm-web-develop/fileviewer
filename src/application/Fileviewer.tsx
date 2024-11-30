@@ -20,6 +20,7 @@ import MultiFileNav from './views/MultiFileNav';
 import { uid } from 'uid';
 import Loading from './views/Loading';
 import ErrorComponent from './views/ErrorComponent';
+import MarkdownDisplay from './views/MarkdownDisplay';
 
 registerAllModules();
 
@@ -43,6 +44,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
   const { appState, setAppState } = useStateStore();
   const pdfRef: React.MutableRefObject<{ pageChange: (arg: number) => void } | undefined> =
     useRef();
+  const mdRef: React.MutableRefObject<
+    { heightLight: (arg: { positions: any[]; bgColor?: string }) => void } | undefined
+  > = useRef();
   // const netController = useStateStore(state => state.currentRequestAbortController)
   const setNetController = useStateStore((state) => state.setCurrentRequestAbortController);
   const container = useRef(null);
@@ -166,6 +170,8 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   const renderFile = (contianerWidth: number) => {
     switch (appState.parse_form) {
+      case 'md':
+        return <MarkdownDisplay ref={mdRef} />;
       case 'pdf':
         return (
           <PDFDisplay
@@ -202,6 +208,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
   }, []); // 添加 initialized 作为依赖项
 
   return {
+    mdRef,
     pdfRef,
     Element: (
       // <Theme asChild {...theme}>

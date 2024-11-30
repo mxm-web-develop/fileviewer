@@ -92,7 +92,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     data.forEach((item: any) => {
       const { position, anotation_color } = item;
       ctx.beginPath();
-      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.8)';
+      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.5)';
       // 使用四个位置绘制矩形
       const [[tlX, tlY]] = position;
       ctx.moveTo(tlX, tlY); // 移动到第一个点
