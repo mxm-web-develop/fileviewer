@@ -24,7 +24,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { annotation } = props;
   const { appState, setAppStatus } = useStateStore();
   const [canvasSize, setCanvasSize] = useState({ w: 660, h: 1000 });
-
+  const [markScale, setMarkScale] = useState(1);
   const pageChange = (page: number) => {
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
@@ -95,10 +95,10 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
       ctx.fillStyle = anotation_color || 'rgba(223,231,255,.5)';
       // 使用四个位置绘制矩形
       const [[tlX, tlY]] = position;
-      ctx.moveTo(tlX, tlY); // 移动到第一个点
+      ctx.moveTo(tlX * markScale, tlY * markScale); // 移动到第一个点
 
       for (let i = 1; i < position.length; i++) {
-        ctx.lineTo(position[i][0], position[i][1]); // 绘制线段
+        ctx.lineTo(position[i][0] * markScale, position[i][1] * markScale); // 绘制线段
       }
 
       ctx.closePath(); // 关闭路径
@@ -107,15 +107,16 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   };
 
   useEffect(() => {
-    if (annotation?.method !== 'position' || !canvasSize.w || !canvasSize.h) return;
+    if (annotation?.method !== 'position' || !canvasSize.w || !canvasSize.h || !markScale) return;
     drawMark();
-  }, [canvasSize, annotation?.data]);
+  }, [canvasSize, annotation?.data, markScale]);
 
   const setSelfCanvasSize = (annotation: AnotationType) => {
     const { origin_paper_size } = annotation;
     if (!origin_paper_size || !props.width) return;
     const curWidth = props.width;
     const scale = +(curWidth / origin_paper_size?.width).toFixed(2);
+    setMarkScale(scale);
     setCanvasSize({ w: curWidth, h: origin_paper_size?.height * scale });
   };
 
