@@ -180,6 +180,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
             scale={render_scale || 1}
             annotation={annotation}
             ref={pdfRef}
+            handleEmmit={actionOnEmmit && actionOnEmmit}
           />
         ) as React.ReactNode;
       case 'docx':

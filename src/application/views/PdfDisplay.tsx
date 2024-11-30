@@ -18,10 +18,11 @@ interface IPDFDisplayer {
   width?: number;
   scale?: number;
   annotation?: AnotationType;
+  handleEmmit?: (type: string) => any;
 }
 
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
-  const { annotation } = props;
+  const { annotation, handleEmmit } = props;
   const { appState, setAppStatus } = useStateStore();
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const [markScale, setMarkScale] = useState(1);
@@ -55,6 +56,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     );
   };
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    handleEmmit && handleEmmit('pdfSuccess');
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
 

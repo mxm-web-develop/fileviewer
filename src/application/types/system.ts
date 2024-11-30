@@ -19,6 +19,7 @@ export type AnotationType = {
     height: number;
   };
   anotation_color?: string;
+  defaultPage?: number;
 };
 
 export interface IUseFileViewer {
