@@ -123,7 +123,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   useEffect(() => {
     if (annotation?.method !== 'position' || !props.width || !annotation.origin_paper_size) return;
     setSelfCanvasSize(annotation);
-  }, [annotation]);
+  }, [annotation?.origin_paper_size, props.width]);
 
   return (
     <div className="h-full">
