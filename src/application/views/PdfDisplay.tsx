@@ -65,41 +65,19 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
       `[data-page-number="${appState.page_manager.current}"]`
     );
     if (canvas && page) {
-      const updateCanvasPosition = () => {
+      // 使用 requestAnimationFrame 确保在下一帧执行
+      setTimeout(() => {
         const { top, left } = page.getBoundingClientRect();
         const parent = page.parentElement; // 获取父元素
         const parentLeft = parent ? parent.getBoundingClientRect().left : 0; // 获取父元素的左边距
-
         canvas.style.position = 'absolute';
         canvas.style.top = `${top}px`;
         canvas.style.left = `${left - parentLeft}px`; // 调整canvas的left值
-
-        // 设置canvas的宽度和高度
+        console.log(numPages);
         canvas.width = page.scrollWidth; // 设置canvas宽度
-        canvas.height = page.scrollHeight; // 设置canvas高度
-
-        // 调用绘图函数
-        drawMark();
-      };
-
-      // 使用 setTimeout 确保在渲染完成后获取高度和宽度
-      setTimeout(() => {
-        updateCanvasPosition();
+        canvas.height = page.scrollHeight; //* numPages + numPages * page_gap; // 设置canvas高度
+        drawMark()
       }, 100); // 延迟100毫秒
-
-      // 创建 ResizeObserver 监听父元素的变化
-      const resizeObserver = new ResizeObserver(() => {
-        updateCanvasPosition(); // 重新计算位置
-      });
-      const parent = page.parentElement;
-      if (parent) {
-        resizeObserver.observe(parent); // 观察父元素
-      }
-
-      // 清理函数
-      return () => {
-        resizeObserver.disconnect(); // 断开观察
-      };
     }
   };
   const onDocumentLoadError = (error: any) => {
