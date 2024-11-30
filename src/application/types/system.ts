@@ -35,5 +35,5 @@ export interface IUseFileViewer {
   actionOnEmmit?: (type: string, data?: any) => any;
   annotation?: AnotationType;
   hide_toolbar?: boolean;
-  // bgColor?: string;
+  bgColor?: string;
 }

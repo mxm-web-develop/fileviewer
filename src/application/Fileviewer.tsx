@@ -37,6 +37,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
     error_text,
     hide_toolbar,
     annotation,
+    bgColor = 'bg-slate-100',
   } = props;
   if (Array.isArray(fileUrl) && !form) {
     throw new Error('多文件格式必须使用form传参指定解析格式.');
@@ -245,7 +246,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
                 </div>
               </div>
             )}
-            <div className={`h-full w-full flex items-center justify-center`}>
+            <div className={`h-full w-full flex items-center justify-center ${bgColor}`}>
               {Array.isArray(fileUrl) && fileUrl.length > 1 && (
                 <div className="multiFile-nav w-[145px] h-full">
                   <ScrollArea style={{ height: '100%' }}>
