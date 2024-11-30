@@ -1,27 +1,54 @@
 import { useEffect, useState } from 'react';
 import { useFileViewer, registerPDFWorker } from './application/lib_enter';
+import { uid } from 'uid';
 registerPDFWorker('../public/worker/pdf.worker.min.js');
 //const SCALE = 0.554;
-const PDFWIDTH = 1190;
+
+const p = `[[[178, 830], [1010, 830], [1010, 921], [178, 921]],
+ [[502, 957], [625, 957], [625, 985], [502, 985]],
+  [[220, 1424], [856, 1424], [856, 1453], [220, 1453]],
+          [[176, 206], [375, 206], [375, 234], [176, 234]]]`;
+
+const n = [2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4];
+const convertData = (positions: number[][][], pages: number[]) => {
+  const annotationPositions: any = [];
+  positions.forEach((positionSet, index) => {
+    const page = pages[index]; // 获取对应的页码
+    const id = uid(16); // 生成唯一的id
+
+    annotationPositions.push({
+      id,
+      page,
+      anotation_color: '',
+      position: [
+        positionSet[0], // tl
+        positionSet[1], // tr
+        positionSet[2], // br
+        positionSet[3], // bl
+      ],
+    });
+  });
+
+  return annotationPositions;
+};
+
+const positions = JSON.parse(p); // 将字符串解析为数组
+const annotationList = convertData(positions, n);
+
 function Preview() {
-  // 修正路径
-  console.log('====================================');
-  console.log('更新啦啦啦啦啦啦');
-  console.log('====================================');
   const [curPositions, setCurPositions]: any = useState([]);
-  const [renderWidth, setRenderWidth] = useState(660);
-  const [SCALE, setRenderScale] = useState(0.555);
   const { Element, pdfRef } = useFileViewer({
     fileUrl:
-      'http://10.15.12.13:9000/dev-rag-data/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95_%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%8F%8D%E6%B4%97%E9%92%B1%E6%B3%95/V0/%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%8F%8D%E6%B4%97%E9%92%B1%E6%B3%95.pdf',
+      'http://10.15.12.13:9000/dev-rag-data/syt_test/syt_test_%E8%BD%B4%E6%89%BF%E7%9F%A5%E8%AF%86%E8%BD%B4%E6%89%BF%E7%9A%84%E7%BB%93%E6%9E%84%E5%8F%8A%E5%90%84%E6%9E%84%E6%88%90%E9%9B%B6%E4%BB%B6%E7%9A%84%E4%BD%9C%E7%94%A8/V0/%E8%BD%B4%E6%89%BF%E7%9F%A5%E8%AF%86%EF%BC%883%EF%BC%89%E2%80%94%E2%80%94%E8%BD%B4%E6%89%BF%E7%9A%84%E7%BB%93%E6%9E%84%E5%8F%8A%E5%90%84%E6%9E%84%E6%88%90%E9%9B%B6%E4%BB%B6%E7%9A%84%E4%BD%9C%E7%94%A8.pdf',
+    // 'http://10.15.12.13:9000/dev-rag-data/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95test1/%E5%AF%8C%E6%96%87%E6%9C%AC%E6%B5%8B%E8%AF%95test1_%E8%BD%B4%E6%89%BF%E6%98%AF%E6%9C%BA%E6%A2%B0%E8%AE%BE%E5%A4%87%E4%B8%AD%E4%B8%BE%E8%B6%B3%E8%BD%BB%E9%87%8D%E7%9A%84%E9%9B%B6%E9%83%A8%E4%BB%B6%E5%89%AF%E6%9C%AC/V0/%E8%BD%B4%E6%89%BF%E6%98%AF%E6%9C%BA%E6%A2%B0%E8%AE%BE%E5%A4%87%E4%B8%AD%E4%B8%BE%E8%B6%B3%E8%BD%BB%E9%87%8D%E7%9A%84%E9%9B%B6%E9%83%A8%E4%BB%B6-%E5%89%AF%E6%9C%AC.pdf',
     //'http://10.15.12.13:9000/dev-rag-data/%E6%99%AE%E9%80%9A%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95/%E6%99%AE%E9%80%9A%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95_n%E6%A1%88IWT%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88%E6%A1%88%E4%BE%8B%E5%BA%93/V0/n%E6%A1%88IWT_%E4%BA%94%E5%BA%93%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E6%A8%A1%E7%89%88-%E6%A1%88%E4%BE%8B%E5%BA%93.xlsx',
     form: 'pdf',
     annotation: {
       method: 'position',
       data: curPositions,
+      origin_paper_size: { width: 1191, height: 1684 },
     },
-    render_width: renderWidth,
-    // render_scale: SCALE,
+    render_width: 660,
     hide_toolbar: true,
   });
 
@@ -50,14 +77,7 @@ function Preview() {
       <button
         onClick={() => {
           pdfRef.current?.pageChange(1);
-          setCurPositions([
-            {
-              x: 329 * SCALE,
-              y: 176 * SCALE,
-              w: 532 * SCALE,
-              h: 55 * SCALE,
-            },
-          ]);
+          setCurPositions(annotationList);
         }}
       >
         翻页1
@@ -65,14 +85,7 @@ function Preview() {
       <button
         onClick={() => {
           pdfRef.current?.pageChange(2);
-          setCurPositions([
-            {
-              x: 169 * SCALE,
-              y: 232 * SCALE,
-              w: 770 * SCALE,
-              h: 876 * SCALE,
-            },
-          ]);
+          setCurPositions(annotationList);
         }}
       >
         翻页2
@@ -80,15 +93,7 @@ function Preview() {
       <button
         onClick={() => {
           pdfRef.current?.pageChange(6);
-          setCurPositions([
-            {
-              x: 170 * SCALE,
-              y: 158 * SCALE,
-              w: 698 * SCALE,
-              h: 952 * SCALE,
-              bgColor: 'rgba(225,238,223,.5)',
-            },
-          ]);
+          setCurPositions(annotationList);
         }}
       >
         翻页6

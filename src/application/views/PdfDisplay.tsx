@@ -7,6 +7,7 @@ import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
+import { AnotationPosition, AnotationType } from '../types/system';
 // const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
 // import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -20,34 +21,21 @@ export function registerPDFWorker(workerUrl: string) {
 interface IPDFDisplayer {
   width?: number;
   scale?: number;
-  annotation?: {
-    method: 'match' | 'position' | 'index';
-    data?: [
-      {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-      }
-    ];
-  };
+  annotation?: AnotationType;
 }
 
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { annotation } = props;
   const { appState, setAppStatus } = useStateStore();
-  const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
+  const [canvasSize, setCanvasSize] = useState({ w: 660, h: 1000 });
+
   const pageChange = (page: number) => {
-    // 使用 querySelector 获取第一个匹配的元素
-    // const element = document.querySelector(`[data-page-number="${page}"]`);
-    // if (!element) return;
-    // element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
         draft.appState.page_manager = {
           ...draft.appState.page_manager,
           current: page,
-        }; // 确保 page_manager 存在并更新 total
+        };
       })
     );
   };
@@ -97,39 +85,48 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   }, [appState.data, appState.current_file]);
 
   const drawMark = () => {
+    const { data }: any = annotation;
+
     const selfCanvas: any = document.getElementById('selfCanvas');
+    if (!selfCanvas) return;
     const ctx = selfCanvas.getContext('2d');
-    ctx.clearRect(0, 0, canvasSize.w, canvasSize.h);
-    if (!annotation?.data?.length) return;
-    (annotation?.data || []).forEach((item: any) => {
+
+    ctx.clearRect(0, 0, canvasSize.w, canvasSize.h); // 清空画布
+
+    data.forEach((item: any) => {
+      const { position, anotation_color } = item;
       ctx.beginPath();
-      ctx.fillStyle = item.bgColor || 'rgba(223,231,255,.7)';
-      ctx.rect(item.x, item.y, item.w, item.h);
-      ctx.fill();
+      ctx.fillStyle = anotation_color || 'rgba(223,231,255,.8)';
+      // 使用四个位置绘制矩形
+      const [[tlX, tlY]] = position;
+      ctx.moveTo(tlX, tlY); // 移动到第一个点
+
+      for (let i = 1; i < position.length; i++) {
+        ctx.lineTo(position[i][0], position[i][1]); // 绘制线段
+      }
+
+      ctx.closePath(); // 关闭路径
+      ctx.fill(); // 填充多边形
     });
   };
 
   useEffect(() => {
-    if (annotation?.method === 'position' && canvasSize.w && canvasSize.h) {
-      drawMark();
-    }
+    if (annotation?.method !== 'position' || !canvasSize.w || !canvasSize.h) return;
+    drawMark();
   }, [canvasSize, annotation?.data]);
 
-  const startPolling = () => {
-    timerPolling = setInterval(() => {
-      const canvas: any = document.getElementsByClassName('react-pdf__Page__canvas')[0];
-      if (canvas) {
-        setCanvasSize({ w: canvas.clientWidth, h: canvas.clientHeight });
-        clearInterval(timerPolling);
-      }
-    });
+  const setSelfCanvasSize = (annotation: AnotationType) => {
+    const { origin_paper_size } = annotation;
+    if (!origin_paper_size || !props.width) return;
+    const curWidth = props.width;
+    const scale = +(curWidth / origin_paper_size?.width).toFixed(2);
+    setCanvasSize({ w: curWidth, h: origin_paper_size?.height * scale });
   };
 
   useEffect(() => {
-    if (annotation?.method === 'position') {
-      startPolling();
-    }
-  }, []);
+    if (annotation?.method !== 'position' || !props.width || !annotation.origin_paper_size) return;
+    setSelfCanvasSize(annotation);
+  }, [annotation]);
 
   return (
     <div className="h-full">
@@ -139,16 +136,16 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         size={'2'}
         style={{ height: '100%', width: '100%' }}
       >
-        <div className="w-full mx-auto">
+        <div className="w-full mx-auto" style={{ width: `${canvasSize.w}px` }}>
           <Document
             file={checha_data}
-            className="pdf-document my-[20px] mx-[20px] relative h-full"
+            className="pdf-document relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
           >
             <canvas
               id="selfCanvas"
-              width={props.width || canvasSize.w}
+              width={canvasSize.w}
               height={canvasSize.h}
               className="absolute top-0 left-0 z-10"
             />
