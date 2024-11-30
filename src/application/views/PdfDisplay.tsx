@@ -23,7 +23,7 @@ interface IPDFDisplayer {
 const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { annotation } = props;
   const { appState, setAppStatus } = useStateStore();
-  const [canvasSize, setCanvasSize] = useState({ w: 660, h: 1000 });
+  const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
   const [markScale, setMarkScale] = useState(1);
   const pageChange = (page: number) => {
     useStateStore.setState((prevState) =>

@@ -37,6 +37,10 @@ const annotationList = convertData(positions, n);
 
 function Preview() {
   const [curPositions, setCurPositions]: any = useState([]);
+  const [origin_paper_size, setOriginPaperSize]: any = useState(null);
+  setTimeout(() => {
+    setOriginPaperSize({ width: 1191, height: 1684 });
+  }, 500);
   const { Element, pdfRef, mdRef } = useFileViewer({
     fileUrl:
       // 'http://10.15.12.13:9000/dev-rag-data/%E8%A1%A8%E6%A0%BC%E5%A4%9A%E8%A1%8C%E5%A4%9A%E5%88%97%E6%B5%8B%E8%AF%95/%E8%A1%A8%E6%A0%BC%E5%A4%9A%E8%A1%8C%E5%A4%9A%E5%88%97%E6%B5%8B%E8%AF%95_%E5%8F%B7%E6%96%87%E8%AF%86%E5%88%AB%E7%82%B9/V0/parsed/60%E5%8F%B7%E6%96%87%E8%AF%86%E5%88%AB%E7%82%B9.xlsx.md',
@@ -48,7 +52,7 @@ function Preview() {
     annotation: {
       method: 'position',
       data: curPositions,
-      origin_paper_size: { width: 1191, height: 1684 },
+      origin_paper_size,
     },
     render_width: 660,
     hide_toolbar: true,
