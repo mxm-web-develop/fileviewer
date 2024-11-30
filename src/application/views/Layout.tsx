@@ -8,6 +8,7 @@ import WordIcon from '../assets/word.png';
 import PptIcon from '../assets/ppt.png';
 import { cn } from '@udecode/cn';
 import { X } from 'lucide-react';
+import { AnotationType } from '../types/system';
 
 const typeIcons: { [key: string]: string } = {
   csv: TableIcon,
@@ -23,17 +24,6 @@ const typeIcons: { [key: string]: string } = {
   doc: WordIcon,
 };
 interface ILayout {
-  annotation?: {
-    method: 'match' | 'position' | 'index';
-    data?: [
-      {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-      }
-    ];
-  };
   hide_toolbar?: boolean;
   children?: ReactNode;
   pageBar?: ReactNode;
@@ -46,7 +36,7 @@ interface ILayout {
     rending_text?: string;
   };
 }
-const Layout = ({ children, handleEmmit, pageBar, annotation, hide_toolbar }: ILayout) => {
+const Layout = ({ children, handleEmmit, pageBar, hide_toolbar }: ILayout) => {
   const { appState } = useStateStore();
   const abortAllRequests = useStateStore((state) => state.abortAllRequests);
   const d = appState.data[appState.page_manager.current - 1];
@@ -100,7 +90,7 @@ const Layout = ({ children, handleEmmit, pageBar, annotation, hide_toolbar }: IL
         <div
           className=" relative"
           style={{
-            height: annotation?.method === 'position' ? `calc(100% - 0px)` : `calc(100% - 40px)`,
+            height: hide_toolbar ? `calc(100% - 0px)` : `calc(100% - 40px)`,
           }}
         >
           <div

@@ -7,14 +7,10 @@ import { useStateStore } from '../store';
 import { produce } from 'immer';
 import { AppStatus } from '../store/system.type';
 import { ScrollArea } from '@radix-ui/themes';
-import { AnotationPosition, AnotationType } from '../types/system';
-// const worker = new Worker(new URL("/worker/pdf.worker.min.mjs", import.meta.url));
-// import PDFWorkerMin from '/worker/pdf.worker.min.mjs'
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   '/worker/pdf.worker.min.js',
-//   import.meta.url
-// ).toString();
-let timerPolling: any = null;
+import { AnotationType } from '../types/system';
+const options = {
+  cMapUrl: `/cmaps/`,
+};
 export function registerPDFWorker(workerUrl: string) {
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 }
@@ -142,6 +138,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
             className="pdf-document relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
+            options={options}
           >
             <canvas
               id="selfCanvas"
