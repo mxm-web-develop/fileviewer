@@ -110,7 +110,13 @@ function Preview() {
       </button>
       <button
         onClick={() => {
-          mdRef.current?.heightLight({ positions: [[1, 1]], bgColor: '' });
+          mdRef.current?.heightLight({
+            positions: [
+              [0, 0],
+              [1, 1],
+            ],
+            bgColor: '',
+          });
         }}
       >
         高亮

@@ -21,7 +21,7 @@ const MarkdownDisplay = forwardRef((props: any, ref: any) => {
     if (!curTable) return;
     (positions || []).forEach((item: any) => {
       const [rowIndex, colIndex] = item;
-      const row = curTable.rows[rowIndex];
+      const row = curTable.rows[rowIndex + 1];
       if (row) {
         const cell = row.cells[colIndex];
         if (cell) {
