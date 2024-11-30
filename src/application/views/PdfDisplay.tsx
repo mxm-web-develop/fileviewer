@@ -56,14 +56,17 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     updatePageManager(numPages);
     setAppStatus(AppStatus.LOADED);
+
     const container = document.querySelector('.pdf-document');
     if (container) {
       container.scrollTop = 0; // 滚动到第一页的顶部
     }
+
     const canvas: any = document.getElementById('selfCanvas');
     const page: any = document.querySelector(
       `[data-page-number="${appState.page_manager.current}"]`
     );
+
     if (canvas && page) {
       // 使用 requestAnimationFrame 确保在下一帧执行
       setTimeout(() => {
@@ -74,9 +77,8 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         canvas.style.top = `${top}px`;
         canvas.style.left = `${left - parentLeft}px`; // 调整canvas的left值
         console.log(numPages);
-        canvas.width = page.scrollWidth; // 设置canvas宽度
-        canvas.height = page.scrollHeight; //* numPages + numPages * page_gap; // 设置canvas高度
-        drawMark()
+        // canvas.width = page.scrollWidth; // 设置canvas宽度
+        // canvas.height = page.scrollHeight; //* numPages + numPages * page_gap; // 设置canvas高度
       }, 100); // 延迟100毫秒
     }
   };
@@ -95,51 +97,27 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   }, [appState.data, appState.current_file]);
 
   const drawMark = () => {
-    const testData = [
-      {
-        position: [
-          [100, 100], // tl
-          [200, 100], // tr
-          [200, 200], // br
-          [100, 200]  // bl
-        ],
-        anotation_color: 'rgba(255, 0, 0, 0.5)' // 红色半透明
-      },
-      {
-        position: [
-          [250, 250], // tl
-          [350, 250], // tr
-          [350, 350], // br
-          [250, 350]  // bl
-        ],
-        anotation_color: 'rgba(0, 255, 0, 0.5)' // 绿色半透明
-      }
-    ];
-
+    const { data, origin_paper_size }: any = annotation;
+    const renderWidth = props.width as number;
+    const scale = +(renderWidth / origin_paper_size.width).toFixed(2);
+    const renderHeight = origin_paper_size.height * scale;
+    setCanvasSize({ w: renderWidth, h: renderHeight });
     const selfCanvas: any = document.getElementById('selfCanvas');
     const ctx = selfCanvas.getContext('2d');
-
-    // 获取canvas的实际宽度和高度
-    const renderWidth = selfCanvas.width;
-    const renderHeight = selfCanvas.height;
-
-    ctx.clearRect(0, 0, renderWidth, renderHeight); // 清空画布
-
-    testData.forEach((item: any) => {
+    ctx.clearRect(0, 0, renderWidth, renderHeight);
+    (data || []).forEach((item: any) => {
       const { position, anotation_color } = item;
       ctx.beginPath();
       ctx.fillStyle = anotation_color || 'rgba(223,231,255,.7)';
-
-      // 使用四个位置绘制多边形
+      // 使用四个位置绘制矩形
       const [[tlX, tlY]] = position;
-      ctx.moveTo(tlX, tlY); // 移动到第一个点
-
+      // 绘制矩形
+      ctx.moveTo(tlX * scale, tlY * scale);
       for (let i = 1; i < position.length; i++) {
-        ctx.lineTo(position[i][0], position[i][1]); // 绘制线段
+        ctx.lineTo(position[i][0] * scale, position[i][1] * scale);
       }
-
-      ctx.closePath(); // 关闭路径
-      ctx.fill(); // 填充多边形
+      ctx.closePath();
+      ctx.fill();
     });
   };
 
@@ -153,11 +131,11 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   //   });
   // };
 
-  // useEffect(() => {
-  //   if (annotation?.method === 'position' && annotation?.data?.length && props.width) {
-  //     drawMark();
-  //   }
-  // }, [annotation?.data, props.width]);
+  useEffect(() => {
+    if (annotation?.method === 'position' && annotation?.data?.length && props.width) {
+      drawMark();
+    }
+  }, [annotation?.data, props.width]);
 
   return (
     <div className="h-full">
