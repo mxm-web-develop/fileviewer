@@ -22,7 +22,7 @@ import Loading from './views/Loading';
 import ErrorComponent from './views/ErrorComponent';
 
 registerAllModules();
-const defaultAnnotationColor = 'rgba(0,0,0,.4)';
+const defaultAnnotationColor = 'rgba(0,0,0,.4)'
 export const useFileViewer = (props: IUseFileViewer) => {
   const {
     fileUrl,
@@ -246,10 +246,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
             )}
             <div
               style={{
-                background: defaultAnnotationColor,
+                background: props.annotation && props.annotation?.anotation_color ? props.annotation?.anotation_color : defaultAnnotationColor
               }}
-              className={` h-full w-full flex items-center justify-center`}
-            >
+              className={` h-full w-full flex items-center justify-center`}>
               {Array.isArray(fileUrl) && fileUrl.length > 1 && (
                 <div className="multiFile-nav w-[145px] h-full">
                   <ScrollArea style={{ height: '100%' }}>
