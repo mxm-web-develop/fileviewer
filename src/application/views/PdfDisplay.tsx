@@ -136,12 +136,12 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
         style={{ height: '100%', width: '100%' }}
       >
         <div
-          className="mx-auto my-[20px]"
+          className="mx-auto"
           style={{ width: annotation?.method === 'position' ? canvasSize.w : '100%' }}
         >
           <Document
             file={checha_data}
-            className="pdf-document my-[20px] relative h-full"
+            className="pdf-document relative h-full"
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
             options={options}
