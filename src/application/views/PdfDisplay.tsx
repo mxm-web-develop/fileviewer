@@ -127,6 +127,10 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     setSelfCanvasSize(annotation);
   }, [annotation?.origin_paper_size, props.width]);
 
+  useEffect(() => {
+    console.log('canvasSize', canvasSize);
+  }, [canvasSize]);
+
   return (
     <div className="h-full">
       <ScrollArea
