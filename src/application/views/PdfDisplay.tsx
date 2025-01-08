@@ -25,7 +25,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   const { annotation, handleEmmit } = props;
   const { appState, setAppStatus } = useStateStore();
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
-  const [markScale, setMarkScale] = useState(1);
+  const [markScale, setMarkScale] = useState(0);
   const pageChange = (page: number) => {
     useStateStore.setState((prevState) =>
       produce(prevState, (draft) => {
