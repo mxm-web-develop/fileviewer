@@ -41,9 +41,18 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     return appState.page_manager.total;
   };
 
+  const getAllConfig = () => {
+    return {
+      markScale,
+      canvasSize,
+      annotation,
+    };
+  };
+
   useImperativeHandle(ref, () => ({
     pageChange,
     getTotal,
+    getAllConfig,
   }));
   const updatePageManager = (numPages: number) => {
     useStateStore.setState((prevState) =>
@@ -133,10 +142,6 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
     if (annotation?.method !== 'position' || !props.width || !annotation.origin_paper_size) return;
     setSelfCanvasSize(annotation);
   }, [annotation?.origin_paper_size, props.width]);
-
-  useEffect(() => {
-    console.log('canvasSize', canvasSize);
-  }, [canvasSize]);
 
   return (
     <div className="h-full">
