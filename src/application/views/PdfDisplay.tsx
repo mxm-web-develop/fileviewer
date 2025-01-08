@@ -109,7 +109,14 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
   };
 
   useEffect(() => {
-    if (annotation?.method !== 'position' || !canvasSize.w || !canvasSize.h || !markScale) return;
+    if (
+      annotation?.method !== 'position' ||
+      !canvasSize.w ||
+      !canvasSize.h ||
+      !markScale ||
+      !annotation?.data
+    )
+      return;
     drawMark();
   }, [canvasSize, annotation?.data, markScale]);
 
