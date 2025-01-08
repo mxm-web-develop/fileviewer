@@ -43,8 +43,9 @@ export const useFileViewer = (props: IUseFileViewer) => {
     throw new Error('多文件格式必须使用form传参指定解析格式.');
   }
   const { appState, setAppState } = useStateStore();
-  const pdfRef: React.MutableRefObject<{ pageChange: (arg: number) => void } | undefined> =
-    useRef();
+  const pdfRef: React.MutableRefObject<
+    { pageChange: (arg: number) => void; getAllConfig: () => any } | undefined
+  > = useRef();
   const mdRef: React.MutableRefObject<
     { heightLight: (arg: { positions: any[]; bgColor?: string }) => void } | undefined
   > = useRef();

@@ -46,6 +46,7 @@ const PDFDisplay = forwardRef((props: IPDFDisplayer, ref) => {
       markScale,
       canvasSize,
       annotation,
+      renderWidth: props.width,
     };
   };
 
