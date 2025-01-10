@@ -38,6 +38,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
     hide_toolbar,
     annotation,
     bgColor = 'bg-slate-100',
+    setPdfInfo,
   } = props;
   if (Array.isArray(fileUrl) && !form) {
     throw new Error('多文件格式必须使用form传参指定解析格式.');
@@ -182,6 +183,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
             annotation={annotation}
             ref={pdfRef}
             handleEmmit={actionOnEmmit && actionOnEmmit}
+            setPdfInfo={setPdfInfo}
           />
         ) as React.ReactNode;
       case 'docx':

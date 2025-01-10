@@ -37,4 +37,5 @@ export interface IUseFileViewer {
   annotation?: AnotationType;
   hide_toolbar?: boolean;
   bgColor?: string;
+  setPdfInfo?: (arg: any) => void;
 }

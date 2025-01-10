@@ -40,6 +40,7 @@ function Preview() {
   const [curPositions, setCurPositions]: any = useState([]);
   const [origin_paper_size, setOriginPaperSize]: any = useState(null);
   const [render_width, setrender_width]: any = useState(null);
+  const [pdfInfo, setPdfInfo] = useState(null);
   useEffect(() => {
     setTimeout(() => {
       setOriginPaperSize({ width: 1920, height: 1080 });
@@ -141,26 +142,13 @@ function Preview() {
     bgColor: '#fff',
     render_width: 526,
     hide_toolbar: true,
+    setPdfInfo,
   });
-
-  // useEffect(() => {
-  //   function handleResize() {
-  //     console.log('Window resized:', window.innerWidth, window.innerHeight);
-  //     const w = window.innerWidth - 100;
-  //     setRenderWidth(w);
-  //     setRenderScale(w / PDFWIDTH);
-
-  //     // 在这里添加你的响应式逻辑
-  //   }
-
-  //   // 添加事件监听器
-  //   window.addEventListener('resize', handleResize);
-
-  //   // 清除事件监听器
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
+  useEffect(() => {
+    console.log('====================================');
+    console.log('pdfInfo', pdfInfo);
+    console.log('====================================');
+  }, [pdfInfo]);
 
   return (
     <div className="h-[800px] w-[900px] relative mx-auto">
