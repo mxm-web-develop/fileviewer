@@ -210,7 +210,7 @@ export const useFileViewer = (props: IUseFileViewer) => {
 
   useEffect(() => {
     init(fileUrl);
-  }, []); // 添加 initialized 作为依赖项
+  }, [fileUrl]); // 添加 initialized 作为依赖项
 
   return {
     mdRef,
