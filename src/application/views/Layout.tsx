@@ -41,10 +41,10 @@ const Layout = ({ children, handleEmmit, pageBar, hide_toolbar }: ILayout) => {
   const abortAllRequests = useStateStore((state) => state.abortAllRequests);
   const d = appState.data[appState.page_manager.current - 1];
   const { currentIcon, currentHeading } = useMemo(() => {
-    const icon = typeIcons[appState.parse_form] || TxtIcon;
+    const icon = typeIcons[appState.display_file_type || appState.parse_form] || TxtIcon;
     const heading = decodeURIComponent(d?.file_name || '文件名');
     return { currentIcon: icon, currentHeading: heading };
-  }, [appState.data, appState.page_manager]);
+  }, [appState.data, appState.page_manager, appState.display_file_type]);
 
   const userHandler = (type: string) => {
     console.log('file_display', type);

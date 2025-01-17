@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFileViewer, registerPDFWorker } from './application/lib_enter';
 import { uid } from 'uid';
-import { log } from 'console';
 registerPDFWorker('../public/worker/pdf.worker.min.js');
 //const SCALE = 0.554;
 
@@ -136,7 +135,8 @@ function Preview() {
     },
     bgColor: '#fff',
     render_width: 526,
-    hide_toolbar: true,
+    hide_toolbar: false,
+    display_file_type: 'csv',
     setPdfInfo,
   });
   useEffect(() => {
