@@ -39,7 +39,7 @@ function Preview() {
   const [curPositions, setCurPositions]: any = useState([]);
   const [origin_paper_size, setOriginPaperSize]: any = useState(null);
   const [render_width, setrender_width]: any = useState(null);
-  const [fileUrl, setFileUrl] = useState<any>(file_url_2);
+  const [fileUrl, setFileUrl] = useState<any>(file_urls);
   const [pdfInfo, setPdfInfo] = useState(null);
   useEffect(() => {
     setTimeout(() => {
@@ -50,93 +50,10 @@ function Preview() {
   const { Element, pdfRef, mdRef } = useFileViewer({
     fileUrl: fileUrl,
     form: 'pdf',
-    annotation: {
-      method: 'position',
-      data: [
-        {
-          id: '85941721f9d',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [94, 38],
-            [570, 38],
-            [570, 69],
-            [94, 69],
-          ],
-        },
-        {
-          id: '5941721f9db',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [81, 81],
-            [396, 81],
-            [396, 120],
-            [81, 120],
-          ],
-        },
-        {
-          id: '941721f9db2',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [81, 130],
-            [778, 130],
-            [778, 263],
-            [81, 263],
-          ],
-        },
-        {
-          id: '41721f9db2a',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [81, 279],
-            [263, 279],
-            [263, 316],
-            [81, 316],
-          ],
-        },
-        {
-          id: '1721f9db2a7',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [91, 335],
-            [768, 335],
-            [768, 429],
-            [91, 429],
-          ],
-        },
-        {
-          id: '721f9db2a77',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [91, 433],
-            [181, 433],
-            [181, 457],
-            [91, 457],
-          ],
-        },
-        {
-          id: '21f9db2a77d',
-          page: 1,
-          anotation_color: 'rgba(223,231,255,.5)',
-          position: [
-            [91, 459],
-            [768, 459],
-            [768, 531],
-            [91, 531],
-          ],
-        },
-      ],
-      origin_paper_size: { width: 1191, height: 1684 },
-    },
     bgColor: '#fff',
     render_width: 526,
     hide_toolbar: false,
-    display_file_type: 'csv',
+    display_file_type: 'ppt',
     setPdfInfo,
   });
   useEffect(() => {

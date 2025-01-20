@@ -33,7 +33,7 @@ const MultiFileNav = () => {
                 isActived(item.id) ? <Play color='#ffffff' size={16} /> : <FileText size={16} color='#000000' />
               }
               <span className="  max-h-[20px] line-clamp-1  text-ellipsis" >
-                {item.file_name}
+                第{index + 1}页
               </span>
             </div>
 
