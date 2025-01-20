@@ -19,6 +19,7 @@ const typeIcons: { [key: string]: string } = {
   png: ImgIcon,
   pdf: PdfIcon,
   ppt: PptIcon,
+  pptx: PptIcon,
   txt: TxtIcon,
   docx: WordIcon,
   doc: WordIcon,
