@@ -4,11 +4,13 @@ import { useStateStore } from '../store';
 import { uid } from 'uid';
 
 export const HtmlDisplay = ({ width }: any) => {
-
   const { appState, setAppStatus } = useStateStore();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const id = useRef(uid(8)); // 使用 useRef 来存储 id
-  const currentFileData = useMemo(() => appState.data.find(item => item.id === appState.current_file), [appState.data, appState.current_file]);
+  const currentFileData = useMemo(
+    () => appState.data.find((item) => item.id === appState.current_file),
+    [appState.data, appState.current_file]
+  );
 
   useEffect(() => {
     console.log(id.current); // 注意这里是 id.current
@@ -30,10 +32,9 @@ export const HtmlDisplay = ({ width }: any) => {
       };
       reader.onerror = (err) => {
         console.log(err);
-      }
+      };
     }
-  }, [appState.status]);
-
+  }, [appState.data]);
 
   return (
     <div className="h-full w-full flex justify-center  mx-auto relative overflow-hidden">
