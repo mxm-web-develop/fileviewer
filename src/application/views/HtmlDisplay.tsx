@@ -14,8 +14,8 @@ export const HtmlDisplay = ({ width }: any) => {
 
   useEffect(() => {
     console.log(id.current); // 注意这里是 id.current
-    if (appState.status === AppStatus.FETCHED) {
-      const blob = currentFileData ? currentFileData.checha_data : null;
+    if (currentFileData?.checha_data) {
+      const blob = currentFileData.checha_data;
       const reader = new FileReader();
       reader.readAsText(blob);
       reader.onload = () => {
